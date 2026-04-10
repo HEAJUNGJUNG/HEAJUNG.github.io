@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정혜정 · 개발자 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+KR:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f; --bg2: #111118; --bg3: #18181f;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+  --text: #e8e8f0; --muted: #888899; --faint: #444455;
+  --accent: #7c6fff; --accent2: #4fffb0; --accent3: #ff6f91;
+  --mono: 'DM Mono', monospace; --sans: 'Noto Sans KR', sans-serif; --display: 'Syne', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.75; min-height: 100vh; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem; background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent2); letter-spacing: 0.03em; }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { font-size: 12px; font-family: var(--mono); color: var(--muted); text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+
+#about { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 2.5rem 4rem; position: relative; overflow: hidden; }
+.hero-grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-glow { position: absolute; top: -200px; left: -100px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(124,111,255,0.12) 0%, transparent 70%); pointer-events: none; }
+.hero-glow2 { position: absolute; bottom: -150px; right: -50px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(79,255,176,0.08) 0%, transparent 70%); pointer-events: none; }
+.hero-inner { position: relative; max-width: 900px; }
+.hero-tag { font-family: var(--mono); font-size: 12px; color: var(--accent2); letter-spacing: 0.1em; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+.hero-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent2); }
+h1.hero-name { font-family: var(--display); font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; color: var(--text); margin-bottom: 0.5rem; }
+h1.hero-name span { color: var(--accent); }
+.hero-role { font-family: var(--mono); font-size: 14px; color: var(--muted); margin-bottom: 2rem; letter-spacing: 0.02em; }
+.hero-desc { font-size: 15px; color: var(--muted); max-width: 600px; line-height: 1.9; margin-bottom: 2.5rem; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary { display: inline-block; padding: 11px 24px; background: var(--accent); color: #fff; border-radius: 6px; text-decoration: none; font-size: 13px; font-family: var(--mono); font-weight: 500; transition: opacity .2s; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-ghost { display: inline-block; padding: 11px 24px; border: 1px solid var(--border2); color: var(--text); border-radius: 6px; text-decoration: none; font-size: 13px; font-family: var(--mono); font-weight: 500; transition: border-color .2s; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.hero-chips { margin-top: 3rem; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--mono); font-size: 11px; color: var(--faint); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; transition: all .2s; }
+.chip:hover { border-color: var(--border2); color: var(--muted); }
+
+section { padding: 5rem 2.5rem; }
+.section-inner { max-width: 900px; margin: 0 auto; }
+.section-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.section-label::before { content: '//'; color: var(--faint); }
+h2.section-title { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; margin-bottom: 3rem; color: var(--text); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.career-list { display: flex; flex-direction: column; }
+.career-item { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--border); position: relative; }
+.career-item::before { content: ''; position: absolute; left: 158px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+.career-period { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 4px; line-height: 1.6; }
+.career-current { display: inline-block; margin-top: 6px; font-size: 10px; background: rgba(79,255,176,0.1); color: var(--accent2); border: 1px solid rgba(79,255,176,0.25); border-radius: 4px; padding: 2px 8px; }
+.career-company { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 2px; }
+.career-title-role { font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+.career-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+.career-bullets { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.career-bullets li { font-size: 13px; color: var(--muted); padding-left: 16px; position: relative; }
+.career-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 11px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 3px 9px; }
+
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.project-card { background: var(--bg2); padding: 2rem; transition: background .2s; cursor: default; position: relative; overflow: hidden; }
+.project-card:hover { background: var(--bg3); }
+.project-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity .2s; }
+.project-card:hover::after { opacity: 1; }
+.project-num { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-bottom: 1rem; }
+.project-name { font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.25; }
+.project-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+.project-result { font-size: 12px; color: var(--accent2); font-family: var(--mono); margin-bottom: 1rem; }
+.project-links { display: flex; gap: 10px; }
+.project-link { font-family: var(--mono); font-size: 11px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; transition: all .2s; }
+.project-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.skills-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+.skill-group-title { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase; }
+.skill-list { display: flex; flex-direction: column; gap: 10px; }
+.skill-row { display: flex; flex-direction: column; gap: 5px; }
+.skill-name { font-size: 13px; color: var(--text); display: flex; justify-content: space-between; }
+.skill-level { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.skill-bar { height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.skill-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+#contact { background: var(--bg2); border-top: 1px solid var(--border); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.contact-left p { font-size: 14px; color: var(--muted); max-width: 340px; }
+.contact-items { display: flex; flex-direction: column; gap: 1.5rem; padding-top: 0.5rem; }
+.contact-row { display: flex; flex-direction: column; gap: 2px; }
+.contact-label { font-family: var(--mono); font-size: 10px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.1em; }
+.contact-val { font-size: 14px; color: var(--text); text-decoration: none; }
+.contact-val:hover { color: var(--accent2); }
+
+footer { padding: 1.5rem 2.5rem; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--faint); border-top: 1px solid var(--border); }
+
+@media (max-width: 700px) {
+  nav { padding: 1rem 1.25rem; } .nav-links { gap: 1.25rem; }
+  section { padding: 3.5rem 1.25rem; } #about { padding: 5rem 1.25rem 3rem; }
+  .career-item { grid-template-columns: 1fr; gap: 0.5rem; } .career-item::before { display: none; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">// heajung.dev</span>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#career">career</a>
+    <a href="#projects">projects</a>
+    <a href="#skills">skills</a>
+    <a href="#contact">contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="about">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">재직 중 · 새로운 기회 탐색 중</div>
+    <h1 class="hero-name">정<span>혜정</span></h1>
+    <p class="hero-role">// Full-Stack Developer · 경력 5년 · 자동차/방산 도메인</p>
+    <p class="hero-desc">
+      웹 서비스 풀스택 개발과 자동차 도메인의 다양한 경험을 바탕으로,
+      현재는 인프라 단까지 아우르는 운영 업무를 담당하고 있습니다.<br><br>
+      대량 데이터의 지연 없는 그리드 렌더링과 배치성 프로세스 설계에 특화되어 있으며,
+      소나큐브 정적분석·모의해킹 대응 등 보안·인프라 영역으로 꾸준히 역량을 확장 중입니다.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">프로젝트 보기</a>
+      <a href="career.html" class="btn-ghost">경력기술서 ↗</a>
+    </div>
+    <div class="hero-chips">
+      <span class="chip">Seoul, Korea</span>
+      <span class="chip">Java 21 · Spring Boot</span>
+      <span class="chip">Thymeleaf · ES6+</span>
+      <span class="chip">MySQL · Oracle</span>
+      <span class="chip">Linux · Nginx</span>
+      <span class="chip">Spring Batch · agGrid</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CAREER -->
+<section id="career">
+  <div class="section-inner fade-in">
+    <div class="section-label">경력</div>
+    <h2 class="section-title">Work Experience</h2>
+    <div class="career-list">
+
+      <div class="career-item">
+        <div class="career-period">
+          2022.01 —<br>현재<br>
+          <span class="career-current">재직중</span>
+        </div>
+        <div class="career-content">
+          <div class="career-company">(주)에이치앤웍스 · Hops(SM팀)</div>
+          <div class="career-title-role">책임 / 풀스택 개발 · 시스템 운영</div>
+          <div class="career-desc">
+            현대·기아 자동차 도메인의 협력사 포탈 및 사내 시스템 개발·운영 전담.
+            백엔드 비즈니스 로직 설계부터 Thymeleaf 기반 고도화 UI 구현, Linux 서버 운영 및 보안 대응까지 전 영역 담당.
+          </div>
+          <ul class="career-bullets">
+            <li>BOM 조회 로직 개선 (Cursor 반복·Full Scan 제거) — 응답속도 5분 → 1분 미만 80% 단축</li>
+            <li>Nginx server.conf 수정으로 web/was 이중화 환경 로드밸런싱 최적화 · 트래픽 균등 분산</li>
+            <li>iBatis Iterator + Chunk(50건) 처리 도입 — Oracle 조회 비용 1,300 → 300, 75% 절감</li>
+            <li>집합(Set) 기반 일괄처리 재설계 — 메모리 점유 과다 및 속도 저하 문제 해소</li>
+            <li>소나큐브 정기 정적분석으로 코드 취약점 선제 개선 · 모의해킹 보안 점검사항 대응</li>
+            <li>Linux 서비스 데몬 등록으로 서버 재기동 시 DRM 서비스 자동 구동 보장</li>
+            <li>Spring Batch 기반 SMS·메일 알림 배치 구현, CSV 업로드 DTO 데이터 매핑 안정화</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Java 21</span><span class="tag">Spring Boot</span><span class="tag">Spring MVC</span>
+            <span class="tag">Spring Batch</span><span class="tag">Thymeleaf</span><span class="tag">ES6+</span>
+            <span class="tag">agGrid</span><span class="tag">tuiGrid</span><span class="tag">jQuery</span>
+            <span class="tag">MySQL</span><span class="tag">Oracle</span><span class="tag">PostgreSQL</span>
+            <span class="tag">MyBatis</span><span class="tag">iBatis</span><span class="tag">Linux</span><span class="tag">Nginx</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner fade-in">
+    <div class="section-label">주요 프로젝트</div>
+    <h2 class="section-title">Featured Projects</h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-num">01 · 2026.01 — 진행중</div>
+        <div class="project-name">기아 군수 협력사포탈 운영</div>
+        <div class="project-desc">사용자 VOC 대응, Linux 기반 서버 배포·배치 모니터링, 애자일 방식의 긴급 비즈니스 요구사항 UI~백엔드 전담 개발.</div>
+        <div class="project-result">→ 로드밸런싱 최적화 · DRM 자동구동 · Nginx 보안라우팅 재설정</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot</span>
+          <span class="tag">MySQL</span><span class="tag">Nginx</span><span class="tag">Linux</span><span class="tag">agGrid</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">02 · 2025.11 — 2026.12</div>
+        <div class="project-name">기아 방산보안포탈</div>
+        <div class="project-desc">방산업무 종사인원의 출입·퇴소·출장 관리부터 투입 절차까지 수작업 보안 업무를 시스템화. REST API POST 설계로 모의해킹 취약점 선제 차단.</div>
+        <div class="project-result">→ 보안 절차 전면 자동화 · SMS/메일 Spring Batch 구현</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot</span>
+          <span class="tag">Thymeleaf</span><span class="tag">ES6+</span><span class="tag">agGrid</span><span class="tag">MySQL</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">03 · 2025.03 — 2025.10</div>
+        <div class="project-name">사내 인트라넷 (휴가/근태)</div>
+        <div class="project-desc">MSA 기반 사내 휴가·근태 관리 시스템 풀스택 개발. @Transactional 트랜잭션 무결성 보장, 트리 그리드 공통 검색 기능 및 다국어 지원 구현.</div>
+        <div class="project-result">→ 공통 기능 JS 모듈화 배포 · 다국어 지원</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot</span>
+          <span class="tag">PostgreSQL</span><span class="tag">MSA</span><span class="tag">tuiGrid</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">04 · 2024.10 — 2025.03</div>
+        <div class="project-name">현대 상용 시작차 관리</div>
+        <div class="project-desc">대량 데이터 처리 로직 개선 및 쿼리 튜닝. BOM 조회 Cursor 반복·Full Scan 제거, Apache POI 활용 대량 부품 데이터 일괄 적재·검증.</div>
+        <div class="project-result">→ 응답속도 5분 → 1분 미만 (80% 개선)</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java</span><span class="tag">Spring MVC</span>
+          <span class="tag">Oracle</span><span class="tag">PL/SQL</span><span class="tag">Batch</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">05 · 2023.05 — 2023.09</div>
+        <div class="project-name">현대 주행 데이터 시각화</div>
+        <div class="project-desc">Hadoop 적재 대용량 주행 로그를 HiveQL로 추출 후 Java 연산·Oracle 적재, Spotfire 연구원 분석용 대시보드 개발까지 ETL 파이프라인 전 구간 구축.</div>
+        <div class="project-result">→ 주/월 배치 성능 검증 및 안정화</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java</span><span class="tag">Oracle</span>
+          <span class="tag">HiveQL</span><span class="tag">Hadoop</span><span class="tag">Spotfire</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">06 · 2024.06 — 2024.07</div>
+        <div class="project-name">기아 군수 재원관리</div>
+        <div class="project-desc">차량 재원 등록 시스템 개발. iBatis Chunk 처리로 Oracle 조회 비용 대폭 절감, Non-blocking 전환으로 화면 프리징 완전 제거.</div>
+        <div class="project-result">→ Oracle 조회 비용 75% 절감 (1,300 → 300)</div>
+        <div class="tag-row" style="margin-bottom: 1rem;">
+          <span class="tag">Java</span><span class="tag">Spring MVC</span>
+          <span class="tag">Oracle</span><span class="tag">iBatis</span>
+        </div>
+        <div class="project-links"><a href="#" class="project-link">상세보기 ↗</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner fade-in">
+    <div class="section-label">기술 스택</div>
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-wrap">
+
+      <div class="skill-group">
+        <div class="skill-group-title">Backend</div>
+        <div class="skill-list">
+          <div class="skill-row"><div class="skill-name"><span>Java 21 / Spring Boot</span><span class="skill-level">상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>Spring Batch</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>MyBatis / iBatis</span><span class="skill-level">상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>RESTful API</span><span class="skill-level">상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">Frontend</div>
+        <div class="skill-list">
+          <div class="skill-row"><div class="skill-name"><span>Thymeleaf</span><span class="skill-level">상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>JavaScript (ES6+)</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>agGrid / tuiGrid</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>jQuery / Ajax</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">DB / Infra</div>
+        <div class="skill-list">
+          <div class="skill-row"><div class="skill-name"><span>MySQL / Oracle</span><span class="skill-level">상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>Linux / Nginx</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>SonarQube</span><span class="skill-level">중급</span></div><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div></div>
+          <div class="skill-row"><div class="skill-name"><span>Git / SVN</span><span class="skill-level">중상급</span></div><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner fade-in">
+    <div class="contact-grid">
+      <div class="contact-left">
+        <div class="section-label">연락처</div>
+        <h2 class="section-title" style="margin-bottom: 1rem;">Let's work<br>together.</h2>
+        <p>새로운 기회와 협업에 열려 있습니다.<br>언제든지 편하게 연락 주세요.</p>
+      </div>
+      <div class="contact-items">
+        <div class="contact-row">
+          <span class="contact-label">Email</span>
+          <a href="mailto:heajung97@naver.com" class="contact-val">heajung97@naver.com</a>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Phone</span>
+          <a href="tel:01038872754" class="contact-val">010-3887-2754</a>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">경력기술서</span>
+          <a href="career.html" class="contact-val">career.html ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 정혜정 · Built with HTML/CSS/JS · Hosted on GitHub Pages</span>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
