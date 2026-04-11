@@ -570,10 +570,6 @@
             </li>
             <li style="padding-left:18px;position:relative;margin-bottom:8px;font-size:13px;color:var(--text-muted);line-height:1.6;">
               <span style="position:absolute;left:0;color:var(--accent2);">✗</span>
-              GET 방식 데이터 처리 API가 URL 노출로 <strong style="color:var(--text)">모의해킹 취약점</strong> 지적
-            </li>
-            <li style="padding-left:18px;position:relative;margin-bottom:8px;font-size:13px;color:var(--text-muted);line-height:1.6;">
-              <span style="position:absolute;left:0;color:var(--accent2);">✗</span>
               수백 건 자산 데이터를 <strong style="color:var(--text)">엑셀 수기 입력</strong>으로 처리해 오류·시간 낭비
             </li>
             <li style="padding-left:18px;position:relative;font-size:13px;color:var(--text-muted);line-height:1.6;">
@@ -588,10 +584,6 @@
             <li style="padding-left:18px;position:relative;margin-bottom:8px;font-size:13px;color:var(--text-muted);line-height:1.6;">
               <span style="position:absolute;left:0;color:var(--accent3);">✓</span>
               <strong style="color:var(--text)">Spring Batch</strong>로 SMS·이메일 알림 자동 발신 파이프라인 구축
-            </li>
-            <li style="padding-left:18px;position:relative;margin-bottom:8px;font-size:13px;color:var(--text-muted);line-height:1.6;">
-              <span style="position:absolute;left:0;color:var(--accent3);">✓</span>
-              데이터 처리 API 전면 <strong style="color:var(--text)">POST 방식 재설계</strong> + DTO 바인딩으로 보안 강화
             </li>
             <li style="padding-left:18px;position:relative;margin-bottom:8px;font-size:13px;color:var(--text-muted);line-height:1.6;">
               <span style="position:absolute;left:0;color:var(--accent3);">✓</span>
@@ -739,11 +731,13 @@
       <!-- Spring Batch -->
       <div class="code-section">
         <div class="code-header">
-          <span class="code-filename">NotificationJobConfig.java</span>
+          <span class="code-filename">BatcbService.java + BatchController.java + SchedulerConfig.java</span>
           <span class="code-lang">Java · Spring Batch</span>
         </div>
         <div class="code-wrap">
-          <pre><code class="language-java">@Configuration
+          <pre><code class="language-java">
+// ── BatcbService.java  반납일 지난 자산유무 확인 및 알림메일 발송 서비스 로직 ─────────────────────────────────────────────
+@Configuration
 @RequiredArgsConstructor
 public class NotificationJobConfig {
 
@@ -783,71 +777,12 @@ public class NotificationJobConfig {
                 .writer(emailItemWriter)
                 .build();
     }
+// ── BatchController.java  배치 코드로 서비스를 구분 , 할당된 배치 코드로 해당하는 서비스를 호출 ────────────────────────────────
+
+// ── SchedulerConfig.java  할당된 배치 코드로 컨트롤러에 해당 작업을 언제 실행할건지 cron으로 설정 ──────────────────────────────
+
 }</code></pre>
-        </div>
-        <div class="code-annotation">
-          <span class="tag">POINT</span>
-          청크 단위 50건 처리로 메모리 점유 최소화. SMS → Email 순서 보장(next 체이닝). 각 Step 독립 실행으로 SMS 실패 시 Email Step에 영향 없음.
-        </div>
-      </div>
-
-      <!-- POST API + DTO -->
-      <div class="code-section">
-        <div class="code-header">
-          <span class="code-filename">AssetController.java + AssetUploadDto.java</span>
-          <span class="code-lang">Java · POST API + DTO</span>
-        </div>
-        <div class="code-wrap">
-          <pre><code class="language-java">// ── Controller: GET → POST 재설계 (모의해킹 대응) ──────────────────
-@RestController
-@RequestMapping("/api/assets")
-@RequiredArgsConstructor
-public class AssetController {
-
-    private final AssetService assetService;
-
-    // 취약점 대응: URL 파라미터 노출 제거 → RequestBody로 수신
-    @PostMapping("/upload")
-    public ResponseEntity&lt;ApiResponse&gt; uploadAssets(
-            @RequestBody @Valid AssetUploadRequestDto request,
-            BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.fail(bindingResult.getFieldError().getDefaultMessage()));
-        }
-        int savedCount = assetService.bulkSave(request.getAssets());
-        return ResponseEntity.ok(ApiResponse.success("등록 완료: " + savedCount + "건"));
-    }
-}
-
-// ── DTO: 유효성 검증 내장 ──────────────────────────────────────────
-@Getter
-@NoArgsConstructor
-public class AssetUploadRequestDto {
-
-    @NotNull
-    @Size(min = 1, max = 500, message = "1건 이상 500건 이하로 업로드하세요.")
-    private List&lt;AssetItemDto&gt; assets;
-
-    @Getter
-    @NoArgsConstructor
-    public static class AssetItemDto {
-        @NotBlank(message = "자산 코드는 필수입니다.")
-        private String assetCode;
-
-        @NotBlank
-        @Size(max = 100)
-        private String assetName;
-
-        @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "만료일 형식: YYYY-MM-DD")
-        private String expiryDate;
-
-        @NotBlank
-        private String managerEmail;
-    }
-}</code></pre>
-        </div>
+        </div> 
         <div class="code-annotation">
           <span class="tag">SECURITY</span>
           GET → POST 전환으로 URL에 민감 데이터 미노출. DTO 계층에 @Valid + @Pattern 선언으로 컨트롤러 진입 전 유효성 차단. 최대 500건 사이즈 제한으로 DoS 방어.
