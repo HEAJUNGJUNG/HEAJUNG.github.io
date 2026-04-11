@@ -879,49 +879,146 @@ public class SchedulerConfig {
 // ****** 운영중인 시스템의 실제 코드가 아닌, 일부 기능을 재현한 코드입니다. ******
 
 // ── CSVUploadService.java  DRM 서버에 올라간 파일을 불러와서 파싱 후 데이터 검증과정을 거쳐 DB 적재 ────────────────────────────
+@Service
+@Slf4j
+public class CSVUploadService {
 
-// ── assetUpload.js 화면에서 csv파일을 업로드 후 콜백이 오면 결과팝업 호출 ────────────────────────────────────────────────────		 
-async function handleCsvUpload(file) {
-    const uploadBtn = document.getElementById('uploadBtn');
+    private final AssetMapper assetMapper;
 
-    try {
-        uploadBtn.disabled = true;
-        showSpinner('CSV 파일을 분석 중입니다...');
+    public CSVUploadService(AssetMapper assetMapper) {
+        this.assetMapper = assetMapper;
+    }
 
-        // 1. CSV 파싱 (FileReader → Promise 래핑)
-        const rawData = await parseCSV(file);
+    /**
+     * CSV 파일 파싱 및 유효성 검증 [cite: 69, 195]
+     */
+    public ResponseEntity<Map<String, Object>> parseCSV(String fileId) {
+        // NAS 경로에서 파일 조회 (가상 로직) [cite: 26, 159]
+        File targetFile = getFileFromNas(fileId);
 
-        // 2. 클라이언트 사전 검증 (빈 행, 필수 컬럼 체크)
-        const validated = validateRows(rawData);
-        if (validated.errors.length > 0) {
-            showValidationErrors(validated.errors);
-            return;
+        if (targetFile == null || !targetFile.exists()) {
+            log.error("[CSV] 파일 경로 조회 실패: {}", fileId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        showSpinner('서버에 업로드 중입니다...');
+        List<AssetDTO> successRows = new ArrayList<>();
+        List<Map<String, Object>> errorRows = new ArrayList<>();
 
-        // 3. POST 전송 (URL 파라미터 없이 RequestBody)
-        const response = await fetch('/api/assets/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken() },
-            body: JSON.stringify({ assets: validated.data })
+        // 파일 정합성 검증 및 파싱 [cite: 70, 195]
+        try (Reader reader = new FileReader(targetFile)) {
+            // Apache Commons CSV 등을 사용한 파싱 로직 수행
+            // ... (각 row를 DTO로 매핑 후 검증 함수 호출)
+        } catch (Exception e) {
+            log.error("[CSV] 파싱 중 시스템 오류: {}", e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("successRows", successRows);
+        result.put("errorRows", errorRows);
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+	 * 대량 데이터 일괄 등록 (100건 단위 Chunk 처리 및 예외 전파)
+	 * @param successRows 검증이 완료된 자산 DTO 리스트
+	 * @return 처리 결과 및 성공 건수
+	 * @throws Exception 예외 발생 시 catch하지 않고 상위로 던져 트랜잭션 롤백 유도
+	 */
+    @Transactional
+	public ResponseEntity<Map<String, Object>> uploadAssets(List<AssetDTO> successRows) throws Exception {
+		
+		// 데이터 부재 시 조기 리턴 (Fast-fail)
+		if (successRows == null || successRows.isEmpty()) {
+			return ResponseEntity.ok(Map.of("count", 0, "status", "EMPTY")); 
+		}
+
+		int totalSize = successRows.size();
+		int chunkSize = 100; // 100건 단위로 분할하여 쿼리 길이 및 메모리 과부하 방어 
+
+		// Stream을 활용한 인덱스 기반 분할 처리
+		// subList는 원본 리스트를 참조만 하므로 추가 메모리 할당을 최소화함 
+		IntStream.range(0, (totalSize + chunkSize - 1) / chunkSize)
+				 .mapToObj(i -> successRows.subList(i * chunkSize, Math.min((i + 1) * chunkSize, totalSize)))
+				 .forEach(chunk -> {
+					 // MyBatis foreach 일괄 등록 호출
+					 // 예외 발생 시 별도 catch 없이 즉시 상위로 전파됨
+					 assetMapper.insertAssetBatch(chunk); 
+				 });
+
+		log.info("[BATCH SUCCESS] 총 {}건의 일괄 등록이 완료되었습니다.", totalSize); 
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("count", totalSize);
+		response.put("status", "SUCCESS");
+		
+		return ResponseEntity.ok(response);
+	}
+}
+// ── assetUpload.js 화면에서 csv파일을 업로드 후 콜백이 오면 결과팝업 호출 ────────────────────────────────────────────────────		 
+/**
+ * 자산 일괄 등록 프로세스
+ */
+async function handleCSVUpload() {
+    const fileInput = document.getElementById('csvFile');
+    const file = fileInput.files[0];
+
+    // 1. 파일 및 확장자 검사
+    if (!file || !file.name.endsWith('.csv')) {
+        alert("CSV 파일만 업로드 가능합니다.");
+        return;
+    }
+
+    try {
+        // UI 프리징 방지를 위한 로딩바 활성화
+        showLoading(true); 
+
+        // 2. DRM 파일 업로드 프로세스 (비동기 처리)
+        // DRM 컴포넌트가 Promise를 반환한다고 가정
+        const uploadResult = await new Promise((resolve, reject) => {
+            drmComponent.upload(file, (res) => {
+                if(res.status === 'OK') resolve(res);
+                else reject(new Error("DRM 인증 실패"));
+            });
         });
 
-        const result = await response.json();
+        const fileId = uploadResult.fileId;
 
-        if (!response.ok) throw new Error(result.message);
+        // 3. AJAX를 이용한 CSV 파싱 요청 (검증 단계)
+        const parseResponse = await $.ajax({
+            url: '/api/asset/csv/parse',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ fileId: fileId })
+        });
 
-        showSuccess(`✓ ${result.data} 자산이 등록되었습니다.`);
-        refreshGrid();  // agGrid 데이터 갱신
+        const { successRows, errorRows } = parseResponse;
 
-    } catch (err) {
-        showError('업로드 실패: ' + err.message);
+        // 4. 검증 결과에 따른 사용자 컨펌
+        if (errorRows && errorRows.length > 0) {
+            const confirmMsg = `검증 오류 ${errorRows.length}건이 발견되었습니다. 정상 건만 등록하시겠습니까?`;
+            if (!confirm(confirmMsg)) return;
+        }
+
+        // 5. 최종 일괄 업로드 요청 (Post 방식)
+        const finalResult = await $.ajax({
+            url: '/api/asset/csv/upload',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(successRows)
+        });
+
+        alert(`${finalResult.count}건의 자산이 등록되었습니다.`);
+
+    } catch (error) {
+        console.error("Batch Upload Error:", error);
+        alert("처리 중 오류가 발생했습니다.");
     } finally {
-        uploadBtn.disabled = false;
-        hideSpinner();
+        showLoading(false); // 로딩 종료
     }
-}</code></pre>
+}
+</code></pre>
         </div>
         <div class="code-annotation">
           <span class="tag">UX</span>
