@@ -871,7 +871,7 @@ public class SchedulerConfig {
       <!-- async/await 프론트엔드 -->
       <div class="code-section">
         <div class="code-header">
-          <span class="code-filename">CSVUploadService.java + assetUpload.js</span>
+          <span class="code-filename">CSVUploadService.java + assetUpload.html</span>
           <span class="code-lang">JavaScript · async/await</span>
         </div>
         <div class="code-wrap">
@@ -890,10 +890,10 @@ public class CSVUploadService {
     }
 
     /**
-     * CSV 파일 파싱 및 유효성 검증 [cite: 69, 195]
+     * CSV 파일 파싱 및 유효성 검증 
      */
     public ResponseEntity<Map<String, Object>> parseCSV(String fileId) {
-        // NAS 경로에서 파일 조회 (가상 로직) [cite: 26, 159]
+        // NAS 경로에서 파일 조회 (가상 로직) 
         File targetFile = getFileFromNas(fileId);
 
         if (targetFile == null || !targetFile.exists()) {
@@ -904,7 +904,7 @@ public class CSVUploadService {
         List<AssetDTO> successRows = new ArrayList<>();
         List<Map<String, Object>> errorRows = new ArrayList<>();
 
-        // 파일 정합성 검증 및 파싱 [cite: 70, 195]
+        // 파일 정합성 검증 및 파싱
         try (Reader reader = new FileReader(targetFile)) {
             // Apache Commons CSV 등을 사용한 파싱 로직 수행
             // ... (각 row를 DTO로 매핑 후 검증 함수 호출)
@@ -956,7 +956,7 @@ public class CSVUploadService {
 		return ResponseEntity.ok(response);
 	}
 }
-// ── assetUpload.js 화면에서 csv파일을 업로드 후 콜백이 오면 결과팝업 호출 ────────────────────────────────────────────────────		 
+// ── assetUpload.html 화면에서 csv파일을 업로드 후 콜백이 오면 결과팝업 호출 ────────────────────────────────────────────────────		 
 /**
  * 자산 일괄 등록 프로세스
  */
