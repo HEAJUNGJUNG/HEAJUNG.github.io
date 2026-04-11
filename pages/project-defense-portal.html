@@ -524,7 +524,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-back" href="portfolio.html">← PORTFOLIO</a>
+  <a class="nav-back" href="../index.html">← PORTFOLIO</a>
   <ul class="nav-links">
     <li><a href="#overview" class="active">개요</a></li>
     <li><a href="#architecture">아키텍처</a></li>
@@ -727,76 +727,160 @@
     <!-- 코드 스니펫 -->
     <section id="code">
       <div class="sec-label">CODE SNIPPETS</div>
-
       <!-- Spring Batch -->
       <div class="code-section">
         <div class="code-header">
-          <span class="code-filename">BatchService.java + BatchController.java + SchedulerConfig.java</span>
+          <span class="code-filename">AssetBatchService.java + BatchController.java + SchedulerConfig.java </span> 
           <span class="code-lang">Java · Spring Batch</span>
+		  
         </div>
         <div class="code-wrap">
           <pre><code class="language-java">
-// ── BatchService.java  반납일 지난 자산유무 확인 및 알림메일 발송 서비스 로직 ─────────────────────────────────────────────
-@Configuration
-@RequiredArgsConstructor
-public class NotificationJobConfig {
+// ****** 운영중인 시스템의 실제 코드가 아닌, 일부 기능을 재현한 코드입니다. ******
 
-    private final JobBuilderFactory jobBuilderFactory;
-    private final StepBuilderFactory stepBuilderFactory;
-    private final AssetNotificationReader notificationReader;
-    private final SmsItemWriter smsItemWriter;
-    private final EmailItemWriter emailItemWriter;
+// ── AssetBatchService.java  반납일 지난 자산유무 확인 및 알림메일 발송 서비스 로직 ───────────────────────────────────────────
+@Service
+@Slf4j
+public class AssetBatchService {
 
-    // 자산 만료 알림 Job - 스케줄러에 의해 주기적 실행
-    @Bean
-    public Job assetNotificationJob() {
-        return jobBuilderFactory.get("assetNotificationJob")
-                .start(smsNotificationStep())
-                .next(emailNotificationStep())
-                .build();
+    private final AssetMapper assetMapper;
+    private final MailService mailService;
+
+    public AssetBatchService(AssetMapper assetMapper, MailService mailService) {
+        this.assetMapper = assetMapper;
+        this.mailService = mailService;
     }
 
-    // SMS 발송 Step: 청크 단위(50건) 처리
-    @Bean
-    public Step smsNotificationStep() {
-        return stepBuilderFactory.get("smsNotificationStep")
-                .&lt;AssetNotificationDto, SmsPayload&gt;chunk(50)
-                .reader(notificationReader)
-                .processor(smsProcessor())  // 수신자·메시지 포맷 변환
-                .writer(smsItemWriter)       // 외부 SMS API 호출
-                .build();
-    }
+    public Map<String, Object> checkOverdueAssetsAndSendMail() {
+        Map<String, Object> summary = new HashMap<>();
+        
+        // 1. 반납일 지난 예약건 조회
+        List<Map<String, Object>> userList = assetMapper.selectOverdueAssetUsers();
+        if (userList == null || userList.isEmpty()) {
+            summary.put("totalCount", 0);
+            summary.put("successCount", 0);
+            summary.put("message", "조회된 데이터가 없습니다.");
+            return summary;
+        }
 
-    // Email 발송 Step
-    @Bean
-    public Step emailNotificationStep() {
-        return stepBuilderFactory.get("emailNotificationStep")
-                .&lt;AssetNotificationDto, EmailPayload&gt;chunk(50)
-                .reader(notificationReader)
-                .processor(emailProcessor())
-                .writer(emailItemWriter)
-                .build();
+        // 2. 메일 템플릿 조회
+        String template = assetMapper.selectMailTemplate("RETURN_OVERDUE");
+        if (template == null || template.isEmpty()) {
+            log.error("[BATCH ERROR] 메일 템플릿 누락");
+            throw new RuntimeException("Mail template (RETURN_OVERDUE) is missing in DB");
+        }
+
+        int successCount = 0;
+
+        // 3. 루프 처리 및 메일 발송
+        for (Map<String, Object> user : userList) {
+            String email = (String) user.get("EMAIL");
+            
+            if (email == null || email.isBlank()) {
+                log.error("[BATCH SKIP] 이메일 정보 없음: {}", user.get("USER_NAME"));
+                continue;
+            }
+
+            try {
+                Map<String, Object> mailParams = new HashMap<>(user);
+                mailParams.put("content", template);
+                
+                mailService.sendMail(mailParams);
+                successCount++;
+            } catch (Exception e) {
+                log.error("[BATCH FAIL] 메일 발송 오류 ({}): {}", user.get("USER_NAME"), e.getMessage());
+            }
+        }
+
+        summary.put("totalCount", userList.size());
+        summary.put("successCount", successCount);
+        summary.put("status", "COMPLETED");
+
+        log.info("[BATCH RESULT] Total: {}, Success: {}", userList.size(), successCount);
+        return summary;
     }
+}
 // ── BatchController.java  배치 코드로 서비스를 구분 , 할당된 배치 코드로 해당하는 서비스를 호출 ────────────────────────────────
+@RestController
+@RequestMapping("/api/batch")
+@Slf4j
+public class BatchController {
 
+    private final AssetBatchService assetBatchService;
+
+    public BatchController(AssetBatchService assetBatchService) {
+        this.assetBatchService = assetBatchService;
+    }
+
+    @PostMapping("/execute")
+    public ResponseEntity<Map<String, Object>> executeBatchByCode(@RequestParam String batchCode) {
+        log.info("Batch Execution Triggered: {}", batchCode);
+        
+        Map<String, Object> response = new HashMap<>();
+
+        if ("ASSET_01".equals(batchCode)) {
+            try {
+                // 서비스 호출 및 결과 데이터 수신
+                Map<String, Object> result = assetBatchService.checkOverdueAssetsAndSendMail();
+                response.put("status", "SUCCESS");
+                response.put("data", result);
+                return ResponseEntity.ok(response); // 200 OK
+            } catch (Exception e) {
+                log.error("Batch execution failed: {}", e.getMessage());
+                response.put("status", "ERROR");
+                response.put("message", e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // 500 Error
+            }
+        } else {
+            response.put("status", "FAIL");
+            response.put("message", "Invalid Batch Code");
+            return ResponseEntity.badRequest().body(response); // 400 Bad Request
+        }
+    }
+}
 // ── SchedulerConfig.java  할당된 배치 코드로 컨트롤러에 해당 작업을 언제 실행할건지 cron으로 설정 ──────────────────────────────
+@Configuration
+@EnableScheduling
+public class SchedulerConfig {
+
+    private final BatchController batchController;
+
+    public SchedulerConfig(BatchController batchController) {
+        this.batchController = batchController;
+    }
+
+    // 매일 오전 6시 30분 실행 (초 분 시 일 월 요일)
+    @Scheduled(cron = "0 30 6 * * *")
+    public void runAssetReturnBatch() {
+        // 공통코드 ASSET_01을 파라미터로 컨트롤러 호출
+        batchController.executeBatchByCode("ASSET_01");
+    }
+}
 
 }</code></pre>
         </div> 
         <div class="code-annotation">
-          <span class="tag">SECURITY</span>
-          GET → POST 전환으로 URL에 민감 데이터 미노출. DTO 계층에 @Valid + @Pattern 선언으로 컨트롤러 진입 전 유효성 차단. 최대 500건 사이즈 제한으로 DoS 방어.
+          <span class="tag">SECURITY</span><br/>
+          - 배치 실행 코드는 공통코드로 관리
+		  - 매일 하루 1번만 실행하므로 서버부하 없다 판단하여, 별도 서버를 두지 않고 프로젝트만 분리하여 실행. <br/>
+		  - 수동실행시 관리자 권한으로 로그인 시에만 보이는 메뉴에서 실행 가능<br/>
+		  - 실행 상태와 실행 서버는 선택 가능(이중화된 서버에 경우는 무조건 한 서버에서만 실행설정, 개발서버는 선택<br/>
         </div>
       </div>
 
       <!-- async/await 프론트엔드 -->
       <div class="code-section">
         <div class="code-header">
-          <span class="code-filename">assetUpload.js</span>
+          <span class="code-filename">CSVUploadService.java + assetUpload.js</span>
           <span class="code-lang">JavaScript · async/await</span>
         </div>
         <div class="code-wrap">
-          <pre><code class="language-javascript">// CSV 파일 → 파싱 → API 전송 비동기 파이프라인
+          <pre><code class="language-javascript">
+// ****** 운영중인 시스템의 실제 코드가 아닌, 일부 기능을 재현한 코드입니다. ******
+
+// ── CSVUploadService.java  DRM 서버에 올라간 파일을 불러와서 파싱 후 데이터 검증과정을 거쳐 DB 적재 ────────────────────────────
+
+// ── assetUpload.js 화면에서 csv파일을 업로드 후 콜백이 오면 결과팝업 호출 ────────────────────────────────────────────────────		 
 async function handleCsvUpload(file) {
     const uploadBtn = document.getElementById('uploadBtn');
 
@@ -1067,7 +1151,6 @@ async function handleCsvUpload(file) {
             <div class="ba-body">
               <ul class="ba-list bad">
                 <li>만료 자산 <strong>수동 확인</strong> — 담당자 누락 빈번</li>
-                <li>GET API 사용 → URL에 자산코드·이메일 <strong>노출</strong></li>
                 <li>Excel 수기 입력 → 오타·중복 <strong>데이터 오류</strong></li>
                 <li>비동기 처리 미흡 → 버튼 클릭 시 <strong>화면 블로킹</strong></li>
               </ul>
@@ -1078,7 +1161,6 @@ async function handleCsvUpload(file) {
             <div class="ba-body">
               <ul class="ba-list good">
                 <li>Spring Batch <strong>자동 발송</strong> — SMS + Email 동시 발송</li>
-                <li>POST + RequestBody → <strong>민감 데이터 URL 미노출</strong></li>
                 <li>CSV 업로드 → DTO 검증 → <strong>일괄 적재</strong> (500건)</li>
                 <li>async/await → <strong>Non-blocking</strong> UX, 진행 상태 표시</li>
               </ul>
@@ -1207,7 +1289,7 @@ async function handleCsvUpload(file) {
 
 <footer>
   <span>정혜정 · PROJECT PORTFOLIO · 2026</span>
-  <a href="portfolio.html">← 전체 포트폴리오 보기</a>
+  <a href="../index.html">← 전체 포트폴리오 보기</a>
 </footer>
 
 <script>
