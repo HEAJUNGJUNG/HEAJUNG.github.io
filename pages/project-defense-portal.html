@@ -1021,11 +1021,11 @@ async function handleCSVUpload() {
 </code></pre>
         </div>
         <div class="code-annotation">
-          <span class="tag"></span>
+          <span class="tag">UX</span>
           <br/>
-          - 비동기 실행으로 앞선 프로세스에서 완료된 이후에 실행하여 블로킹 현상 방지<br/>
-		  - 전체 데이터를 한번에 ISNERT하지 않고 100건씩 나누어 쿼리 길이 및 메모리 과부하 방어<br/>
-		  - try/catch없이 전역에러처리로 에러를 삼키지않고 상위로 전파<br/>
+          - 비동기 흐름제어를 통해 선행 프로세스 완료 이후 후속 로직을 실행 하여 경쟁상태 방지<br/>
+		  - 전체 데이터를 100건씩 Chunk로 분할처리하여 DB커넥션 타임아웃 및 JVM 메모리 과부하 방어<br/>
+		  - try/catch를 지양하고 예외 전파를 통해 트랜잰션 원자성 확보 및 전역에러 핸들링<br/>
         </div>
       </div>
     </section>
