@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기아 군수 협력사포탈 · 정혜정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #18181f;
+  --border: rgba(255,255,255,0.07);
+  --accent: #7b8cff;
+  --accent2: #4ecca3;
+  --accent3: #ff8c6b;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Noto Sans KR', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-weight: 300; line-height: 1.7;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 2.5rem;
+  background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.1em; }
+.nav-menu { display: flex; gap: 1.8rem; }
+.nav-menu a {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s;
+}
+.nav-menu a:hover { color: var(--text); }
+.nav-back a {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s;
+}
+.nav-back a:hover { color: var(--accent); }
+
+/* ── HERO ── */
+.hero {
+  padding: 7rem 2.5rem 0;
+  max-width: 960px; margin: 0 auto;
+  position: relative;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.hero-eyebrow span { color: var(--accent2); }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(78,204,163,0.12); border: 1px solid rgba(78,204,163,0.3);
+  color: var(--accent2); font-family: var(--mono); font-size: 0.65rem;
+  padding: 0.25rem 0.6rem; border-radius: 2px; letter-spacing: 0.1em;
+  margin-bottom: 1rem; display: inline-block;
+}
+.hero-badge::before { content: '●'; font-size: 0.5rem; margin-right: 0.3rem; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; line-height: 1.2;
+  letter-spacing: -0.02em; margin-bottom: 1rem;
+}
+.hero-sub {
+  font-size: 0.95rem; color: var(--muted); max-width: 600px; line-height: 1.8; margin-bottom: 2.5rem;
+}
+.hero-meta {
+  display: flex; gap: 0; flex-wrap: wrap;
+  border: 1px solid var(--border); border-radius: 2px; overflow: hidden; max-width: 600px;
+}
+.meta-item {
+  padding: 0.8rem 1.2rem; border-right: 1px solid var(--border); flex: 1; min-width: 130px;
+}
+.meta-item:last-child { border-right: none; }
+.meta-label { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.meta-val { font-size: 0.85rem; color: var(--text); font-weight: 500; }
+
+/* ── SECTION COMMON ── */
+.section {
+  max-width: 960px; margin: 0 auto;
+  padding: 4rem 2.5rem 0;
+}
+.section-title {
+  font-family: var(--mono); font-size: 0.68rem; color: var(--accent);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── PROBLEM / SOLUTION ── */
+.ps-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden;
+}
+.ps-box { background: var(--surface2); padding: 1.8rem; }
+.ps-box-label {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.label-problem { color: var(--accent3); }
+.label-solution { color: var(--accent2); }
+.ps-list { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+.ps-list li { font-size: 0.84rem; color: #9090a8; line-height: 1.65; padding-left: 1.2rem; position: relative; }
+.ps-list li::before { position: absolute; left: 0; top: 0.1rem; font-size: 0.75rem; }
+.ps-list.problem li::before { content: '✗'; color: var(--accent3); }
+.ps-list.solution li::before { content: '✓'; color: var(--accent2); }
+.ps-list li strong { color: var(--text); font-weight: 500; }
+
+/* ── ARCH ── */
+.arch-box {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 2px;
+  padding: 2rem; overflow-x: auto;
+}
+.arch-layers { display: flex; flex-direction: column; gap: 1px; }
+.arch-layer {
+  display: flex; align-items: stretch; gap: 1px; min-height: 70px;
+}
+.arch-layer-label {
+  font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.12em;
+  writing-mode: vertical-rl; text-orientation: mixed;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 36px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+.arch-nodes { display: flex; gap: 1px; flex: 1; }
+.arch-node {
+  flex: 1; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  padding: 0.8rem; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 0.3rem; min-width: 100px;
+}
+.arch-node.highlight { background: rgba(123,140,255,0.07); border-color: rgba(123,140,255,0.25); }
+.arch-node.highlight2 { background: rgba(78,204,163,0.06); border-color: rgba(78,204,163,0.2); }
+.arch-node-name { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+.arch-node-sub { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); line-height: 1.4; }
+.arch-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--muted); min-width: 28px;
+}
+
+/* ── CODE ── */
+.code-block-wrap { margin-bottom: 1.5rem; }
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2); border: 1px solid var(--border); border-bottom: none;
+  padding: 0.6rem 1rem; border-radius: 2px 2px 0 0;
+}
+.code-filename { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); }
+.code-lang { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+pre {
+  background: #0d0d14; border: 1px solid var(--border); border-radius: 0 0 2px 2px;
+  padding: 1.5rem; overflow-x: auto;
+}
+code {
+  font-family: var(--mono); font-size: 0.78rem; line-height: 1.75; color: #c8c8d8;
+}
+.c-comment { color: #4a4a60; }
+.c-kw { color: #7b8cff; }
+.c-ann { color: #ff8c6b; }
+.c-str { color: #4ecca3; }
+.c-cls { color: #f9c74f; }
+.c-fn { color: #90e0ef; }
+.code-note {
+  margin-top: 0.8rem; padding: 0.8rem 1rem;
+  background: rgba(123,140,255,0.05); border-left: 2px solid var(--accent);
+  font-size: 0.8rem; color: var(--muted); line-height: 1.6;
+}
+.code-note strong { color: var(--text); }
+
+/* ── MOCKUP ── */
+.mockup-wrap {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+}
+.mockup-bar {
+  background: #0d0d14; padding: 0.6rem 1rem;
+  display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid var(--border);
+}
+.mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mockup-dot.r { background: #ff5f57; }
+.mockup-dot.y { background: #ffbd2e; }
+.mockup-dot.g { background: #28c840; }
+.mockup-url {
+  flex: 1; margin-left: 0.5rem;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--muted);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  padding: 0.2rem 0.7rem; border-radius: 2px;
+}
+.mockup-body { padding: 1.5rem; }
+
+/* 목업 내부 UI 공통 */
+.m-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.m-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+.m-alert {
+  background: rgba(255,140,107,0.1); border: 1px solid rgba(255,140,107,0.25);
+  color: var(--accent3); font-size: 0.73rem; padding: 0.5rem 0.8rem;
+  border-radius: 2px; margin-bottom: 1rem; font-family: var(--mono);
+}
+.m-kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.6rem; margin-bottom: 1.2rem; }
+.m-kpi {
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  padding: 0.7rem; border-radius: 2px; text-align: center;
+}
+.m-kpi-num { font-family: var(--mono); font-size: 1.1rem; font-weight: 500; color: var(--accent); }
+.m-kpi-label { font-size: 0.62rem; color: var(--muted); margin-top: 0.2rem; }
+.m-table-wrap { overflow-x: auto; }
+.m-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+.m-table th {
+  font-family: var(--mono); font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em;
+  padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border); text-align: left; font-weight: 400;
+}
+.m-table td { padding: 0.6rem 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: #9090a8; }
+.m-status { display: inline-flex; align-items: center; gap: 0.3rem; font-family: var(--mono); font-size: 0.65rem; }
+.s-active { color: var(--accent2); }
+.s-warn { color: var(--accent3); }
+.s-info { color: var(--accent); }
+.m-btn {
+  font-family: var(--mono); font-size: 0.65rem; padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border); border-radius: 2px; background: rgba(255,255,255,0.04);
+  color: var(--muted); cursor: default;
+}
+.m-tab-bar {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+}
+.m-tab {
+  font-family: var(--mono); font-size: 0.68rem; padding: 0.5rem 1rem;
+  color: var(--muted); border-bottom: 2px solid transparent; cursor: default;
+}
+.m-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.m-sidebar {
+  display: flex; gap: 0;
+}
+.m-side-nav {
+  width: 120px; flex-shrink: 0; border-right: 1px solid var(--border); padding-right: 0.8rem; margin-right: 1rem;
+}
+.m-side-item {
+  font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+  padding: 0.4rem 0.6rem; border-radius: 2px; margin-bottom: 0.2rem; cursor: default;
+}
+.m-side-item.active { background: rgba(123,140,255,0.1); color: var(--accent); }
+.m-content { flex: 1; }
+.m-notice {
+  font-size: 0.72rem; color: var(--muted);
+  font-style: italic; text-align: right; margin-top: 0.8rem; border-top: 1px solid var(--border); padding-top: 0.6rem;
+}
+
+/* ── RESULTS ── */
+.result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.result-item { background: var(--surface2); padding: 1.5rem; }
+.result-num { font-family: var(--mono); font-size: 2rem; font-weight: 500; color: var(--accent); display: block; line-height: 1; margin-bottom: 0.5rem; }
+.result-label { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+.result-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.55; }
+
+/* ── BEFORE/AFTER ── */
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+.ba-box { background: var(--surface2); padding: 1.5rem; }
+.ba-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em; margin-bottom: 1rem; }
+.ba-label.before { color: var(--accent3); }
+.ba-label.after { color: var(--accent2); }
+.ba-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.ba-list li { font-size: 0.83rem; color: #9090a8; padding-left: 1.2rem; position: relative; line-height: 1.6; }
+.ba-list.before li::before { content: '⚠'; position: absolute; left: 0; font-size: 0.7rem; top: 0.1rem; }
+.ba-list.after li::before { content: '✓'; position: absolute; left: 0; color: var(--accent2); top: 0.1rem; }
+.ba-list li strong { color: var(--text); font-weight: 500; }
+
+/* ── TECH STACK ── */
+.tech-section-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.tech-group { background: var(--surface2); border: 1px solid var(--border); padding: 1.2rem; border-radius: 2px; }
+.tech-group-label { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.15em; margin-bottom: 0.8rem; }
+.tech-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tech-chip { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); padding: 0.2rem 0.5rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 2px; }
+.tech-chip.hl { color: var(--accent); border-color: rgba(123,140,255,0.3); background: rgba(123,140,255,0.07); }
+
+/* ── ROLE ── */
+.role-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.6rem; }
+.role-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.8rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 2px; }
+.role-icon { color: var(--accent); font-size: 0.75rem; margin-top: 0.1rem; flex-shrink: 0; }
+.role-text { font-size: 0.82rem; color: #9090a8; line-height: 1.5; }
+
+/* ── CONTRIBUTION ── */
+.contrib-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.contrib-item { }
+.contrib-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-bottom: 0.3rem; }
+.contrib-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.contrib-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 1s ease; }
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; gap: 0; border-left: 2px solid var(--border); margin-left: 0.5rem; }
+.tl-item { display: flex; gap: 1.2rem; padding: 0 0 1.5rem 1.5rem; position: relative; }
+.tl-item::before { content: ''; position: absolute; left: -5px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+.tl-month { font-family: var(--mono); font-size: 0.68rem; color: var(--accent); min-width: 60px; padding-top: 0.1rem; }
+.tl-desc { font-size: 0.83rem; color: #9090a8; line-height: 1.6; }
+.tl-desc strong { color: var(--text); }
+
+/* ── FOOTER ── */
+.page-footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; text-align: center; margin-top: 5rem; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+.page-footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.page-footer a:hover { color: var(--accent); }
+
+/* ── SCROLL FADE IN ── */
+.fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  nav { padding: 1rem 1.2rem; }
+  .hero, .section { padding-left: 1.2rem; padding-right: 1.2rem; }
+  .ps-grid, .ba-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.8rem; }
+  .hero-meta { flex-direction: column; }
+  .m-kpi-row { grid-template-columns: repeat(2,1fr); }
+  .m-sidebar { flex-direction: column; }
+  .m-side-nav { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 0.8rem; margin-bottom: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">// heajung.dev</div>
+  <div class="nav-menu">
+    <a href="#overview">개요</a>
+    <a href="#architecture">아키텍처</a>
+    <a href="#code">코드</a>
+    <a href="#mockup">화면</a>
+    <a href="#result">성과</a>
+  </div>
+  <div class="nav-back"><a href="index.html">← PORTFOLIO</a></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">KIA · <span>MILITARY LOGISTICS PORTAL</span></div>
+  <div class="hero-badge">RUNNING</div>
+  <h1>기아 군수 협력사포탈<br>시스템 운영</h1>
+  <p class="hero-sub">
+    현대·기아 자동차 군수 협력사 포탈의 전담 운영을 맡아 사용자 VOC 대응, Linux 서버 배포·배치 모니터링,
+    긴급 비즈니스 요구사항을 UI부터 백엔드까지 단독으로 개발·대응합니다.
+    Nginx 로드밸런싱 최적화, DRM 자동 구동, 보안 라우팅 재설정 등 인프라 전반을 커버합니다.
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-label">기간</div>
+      <div class="meta-val">2026.01 — 진행중</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">역할</div>
+      <div class="meta-val">풀스택 개발 · 운영</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">소속</div>
+      <div class="meta-val">(주)에이치앤웍스 / 책임</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">기여도</div>
+      <div class="meta-val">Full (단독 운영)</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="section fade-in" id="overview" style="padding-top:3.5rem">
+  <div class="section-title">PROBLEM &amp; SOLUTION</div>
+  <div class="ps-grid">
+    <div class="ps-box">
+      <div class="ps-box-label label-problem">⚠ PROBLEM</div>
+      <ul class="ps-list problem">
+        <li>web/was 이중화 환경에서 <strong>특정 서버로 트래픽이 집중</strong>되어 부하 불균형 발생</li>
+        <li>서버 재기동 시 DRM 서비스가 <strong>자동으로 구동되지 않아</strong> 수동 개입 필요</li>
+        <li>내부 대시보드 연동 시 <strong>필수 URL 경로가 차단</strong>되어 기능 장애</li>
+        <li>모의해킹 사전 준비 미흡으로 <strong>보안 점검 대응 시간 낭비</strong></li>
+      </ul>
+    </div>
+    <div class="ps-box">
+      <div class="ps-box-label label-solution">✓ SOLUTION</div>
+      <ul class="ps-list solution">
+        <li><strong>Nginx server.conf 수정</strong>으로 트래픽 균등 분산 — 로드밸런싱 최적화</li>
+        <li><strong>.service 파일 작성 및 Linux 데몬 등록</strong> — 재기동 시 DRM 자동 구동 보장</li>
+        <li><strong>Location 블록 재설정</strong>으로 특정 URL 패턴만 허용, 차단 문제 해소</li>
+        <li><strong>소나큐브 정적분석 + 로컬 환경 사전 세팅</strong>으로 모의해킹 선제 대응</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="section fade-in" id="architecture">
+  <div class="section-title">ARCHITECTURE</div>
+  <div class="arch-box">
+    <div class="arch-layers">
+      <!-- CLIENT -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">CLIENT</div>
+        <div class="arch-nodes">
+          <div class="arch-node">
+            <div class="arch-node-name">협력사 사용자</div>
+            <div class="arch-node-sub">VOC / 업무 요청</div>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-name">내부 관리자</div>
+            <div class="arch-node-sub">배치·운영 모니터링</div>
+          </div>
+        </div>
+      </div>
+      <!-- arrow -->
+      <div style="display:flex;align-items:center;padding:0.3rem 2.5rem;color:var(--muted);font-size:0.75rem;">↓ HTTPS</div>
+      <!-- INFRA -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">INFRA</div>
+        <div class="arch-nodes">
+          <div class="arch-node highlight">
+            <div class="arch-node-name">Nginx</div>
+            <div class="arch-node-sub">Reverse Proxy<br>Load Balancing<br>보안 라우팅</div>
+          </div>
+          <div class="arch-node highlight">
+            <div class="arch-node-name">Linux Daemon</div>
+            <div class="arch-node-sub">DRM 자동 구동<br>.service 등록</div>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-name">SonarQube</div>
+            <div class="arch-node-sub">정적분석<br>보안 취약점 탐지</div>
+          </div>
+        </div>
+      </div>
+      <!-- arrow -->
+      <div style="display:flex;align-items:center;padding:0.3rem 2.5rem;color:var(--muted);font-size:0.75rem;">↓ WAS 이중화</div>
+      <!-- APP -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">APP</div>
+        <div class="arch-nodes">
+          <div class="arch-node">
+            <div class="arch-node-name">Spring Boot WAS 1</div>
+            <div class="arch-node-sub">Java 21 · Spring MVC<br>Thymeleaf · agGrid</div>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-name">Spring Boot WAS 2</div>
+            <div class="arch-node-sub">Java 21 · Spring MVC<br>Thymeleaf · agGrid</div>
+          </div>
+          <div class="arch-node highlight2">
+            <div class="arch-node-name">Batch Server</div>
+            <div class="arch-node-sub">배치 모니터링<br>스케줄 관리</div>
+          </div>
+        </div>
+      </div>
+      <!-- arrow -->
+      <div style="display:flex;align-items:center;padding:0.3rem 2.5rem;color:var(--muted);font-size:0.75rem;">↓</div>
+      <!-- DATA -->
+      <div class="arch-layer">
+        <div class="arch-layer-label">DATA</div>
+        <div class="arch-nodes">
+          <div class="arch-node">
+            <div class="arch-node-name">MySQL</div>
+            <div class="arch-node-sub">협력사 포탈 DB<br>트랜잭션 보장</div>
+          </div>
+          <div class="arch-node">
+            <div class="arch-node-name">DRM 서버</div>
+            <div class="arch-node-sub">Key 파일 자동 갱신<br>서비스 로그 모니터링</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE -->
+<section class="section fade-in" id="code">
+  <div class="section-title">CODE SNIPPETS</div>
+
+  <!-- Nginx 로드밸런싱 -->
+  <div class="code-block-wrap">
+    <div class="code-header">
+      <span class="code-filename">nginx.conf — upstream 로드밸런싱 설정</span>
+      <span class="code-lang">Nginx Config</span>
+    </div>
+    <pre><code><span class="c-comment"># ****** 운영 시스템의 실제 설정이 아닌 핵심 로직을 재현한 코드입니다 ******</span>
+
+<span class="c-comment"># ── upstream: WAS 이중화 서버 등록 ─────────────────────────────────────</span>
+<span class="c-kw">upstream</span> <span class="c-fn">portal_was</span> {
+    <span class="c-comment"># 기본값: Round Robin — 요청을 순서대로 균등 분배</span>
+    <span class="c-kw">server</span> 192.168.10.11:8080 <span class="c-str">weight=1</span>;
+    <span class="c-kw">server</span> 192.168.10.12:8080 <span class="c-str">weight=1</span>;
+
+    <span class="c-comment"># keepalive: upstream 연결 재사용으로 커넥션 오버헤드 감소</span>
+    <span class="c-kw">keepalive</span> 32;
+}
+
+<span class="c-comment"># ── server 블록: 리버스 프록시 + 보안 라우팅 ─────────────────────────</span>
+<span class="c-kw">server</span> {
+    <span class="c-kw">listen</span> 443 ssl;
+    <span class="c-kw">server_name</span> portal.example.internal;
+
+    <span class="c-comment"># 일반 요청 → WAS 로드밸런싱</span>
+    <span class="c-kw">location</span> / {
+        <span class="c-kw">proxy_pass</span>         http://portal_was;
+        <span class="c-kw">proxy_set_header</span>   Host              $host;
+        <span class="c-kw">proxy_set_header</span>   X-Real-IP         $remote_addr;
+        <span class="c-kw">proxy_set_header</span>   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        <span class="c-kw">proxy_http_version</span> 1.1;
+        <span class="c-kw">proxy_set_header</span>   Connection        <span class="c-str">""</span>;
+    }
+
+    <span class="c-comment"># 내부 대시보드 연동 — 특정 URL 패턴만 허용 (보안 라우팅 재설정)</span>
+    <span class="c-kw">location</span> ~* ^/dashboard/(api|metrics)/ {
+        <span class="c-kw">allow</span> 192.168.0.0/16;   <span class="c-comment"># 내부망만 허용</span>
+        <span class="c-kw">deny</span>  all;
+        <span class="c-kw">proxy_pass</span> http://portal_was;
+    }
+}</code></pre>
+    <div class="code-note">
+      <strong>개선 포인트:</strong> 기존 설정에서 특정 WAS 서버로 트래픽이 집중되던 문제를 upstream Round Robin + keepalive 설정으로 해결.
+      내부 대시보드 연동 시 차단됐던 경로는 Location 블록에서 URL 패턴 기반으로 선별 허용하여 보안과 기능을 동시에 확보했습니다.
+    </div>
+  </div>
+
+  <!-- DRM 데몬 등록 -->
+  <div class="code-block-wrap">
+    <div class="code-header">
+      <span class="code-filename">drm-agent.service — Linux systemd 데몬 등록</span>
+      <span class="code-lang">systemd Unit</span>
+    </div>
+    <pre><code><span class="c-comment"># ****** 운영 시스템의 실제 설정이 아닌 핵심 로직을 재현한 코드입니다 ******</span>
+
+<span class="c-comment"># /etc/systemd/system/drm-agent.service</span>
+<span class="c-comment"># 서버 재기동 시 DRM 서비스 자동 구동 보장을 위한 systemd unit 파일</span>
+
+[<span class="c-cls">Unit</span>]
+<span class="c-kw">Description</span>=DRM Agent Service
+<span class="c-comment"># 네트워크 인터페이스가 준비된 후 기동</span>
+<span class="c-kw">After</span>=network.target
+
+[<span class="c-cls">Service</span>]
+<span class="c-kw">Type</span>=forking
+<span class="c-kw">User</span>=drm-user
+<span class="c-kw">WorkingDirectory</span>=/opt/drm-agent
+<span class="c-kw">ExecStart</span>=/opt/drm-agent/bin/start.sh
+<span class="c-kw">ExecStop</span>=/opt/drm-agent/bin/stop.sh
+
+<span class="c-comment"># 비정상 종료 시 자동 재시작 (30초 후)</span>
+<span class="c-kw">Restart</span>=on-failure
+<span class="c-kw">RestartSec</span>=30
+
+<span class="c-comment"># 표준 출력·에러를 syslog에 남겨 journalctl로 조회 가능</span>
+<span class="c-kw">StandardOutput</span>=journal
+<span class="c-kw">StandardError</span>=journal
+
+[<span class="c-cls">Install</span>]
+<span class="c-comment"># multi-user.target: 일반 서버 runlevel에서 자동 활성화</span>
+<span class="c-kw">WantedBy</span>=multi-user.target
+
+<span class="c-comment"># ── 등록 명령어 ──────────────────────────────────────────────────────</span>
+<span class="c-comment"># sudo systemctl daemon-reload</span>
+<span class="c-comment"># sudo systemctl enable drm-agent   ← 부팅 시 자동 시작 등록</span>
+<span class="c-comment"># sudo systemctl start drm-agent</span>
+<span class="c-comment"># sudo systemctl status drm-agent   ← 상태 확인</span></code></pre>
+    <div class="code-note">
+      <strong>개선 포인트:</strong> 기존에는 서버 재기동 후 DRM 서비스를 수동으로 실행해야 했습니다.
+      systemd unit 파일을 작성하고 <code>enable</code> 등록으로 재기동 후 자동 구동을 보장했으며,
+      <code>Restart=on-failure</code>로 비정상 종료 시에도 자동 복구됩니다.
+    </div>
+  </div>
+
+
+<!-- MOCKUP -->
+<section class="section fade-in" id="mockup">
+  <div class="section-title">UI MOCKUP (재현)</div>
+  <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;">※ 보안 상 실제 화면 미공개 — 동일 기능을 재현한 목업입니다</p>
+
+  <!-- 협력사 포탈 메인 -->
+  <div class="mockup-wrap" style="margin-bottom:1.5rem">
+    <div class="mockup-bar">
+      <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+      <div class="mockup-url">portal.kia-logistics.internal/dashboard</div>
+    </div>
+    <div class="mockup-body">
+      <div class="m-sidebar">
+        <div class="m-side-nav">
+          <div class="m-side-item active">📊 대시보드</div>
+          <div class="m-side-item">📋 VOC 관리</div>
+          <div class="m-side-item">🚛 발주 현황</div>
+          <div class="m-side-item">📦 재고 관리</div>
+          <div class="m-side-item">⚙ 시스템 설정</div>
+        </div>
+        <div class="m-content">
+          <div class="m-topbar">
+            <div class="m-title">🚗 군수 협력사 포탈</div>
+            <div style="font-family:var(--mono);font-size:0.68rem;color:var(--muted);">WAS1 ● &nbsp; WAS2 ●</div>
+          </div>
+          <div class="m-alert">🔄 Nginx 로드밸런싱 상태 — WAS1: 48% · WAS2: 52% · 균등 분산 정상</div>
+          <div class="m-kpi-row">
+            <div class="m-kpi"><div class="m-kpi-num">1,248</div><div class="m-kpi-label">협력사 수</div></div>
+            <div class="m-kpi"><div class="m-kpi-num" style="color:var(--accent3)">7</div><div class="m-kpi-label">미처리 VOC</div></div>
+            <div class="m-kpi"><div class="m-kpi-num" style="color:var(--accent2)">정상</div><div class="m-kpi-label">DRM 상태</div></div>
+            <div class="m-kpi"><div class="m-kpi-num">0</div><div class="m-kpi-label">보안 이슈</div></div>
+          </div>
+          <div class="m-tab-bar">
+            <div class="m-tab active">VOC 현황</div>
+            <div class="m-tab">발주 현황</div>
+            <div class="m-tab">배치 로그</div>
+          </div>
+          <div class="m-table-wrap">
+            <table class="m-table">
+              <thead>
+                <tr><th>접수번호</th><th>협력사</th><th>제목</th><th>처리상태</th><th>접수일</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr><td>VOC-2026-0312</td><td>㈜가나부품</td><td>발주서 데이터 오류 문의</td><td><span class="m-status s-warn">⚠ 처리중</span></td><td>2026-04-10</td><td><span class="m-btn">상세</span></td></tr>
+                <tr><td>VOC-2026-0311</td><td>다라공업</td><td>로그인 오류 신고</td><td><span class="m-status s-active">✓ 완료</span></td><td>2026-04-09</td><td><span class="m-btn">상세</span></td></tr>
+                <tr><td>VOC-2026-0310</td><td>마바기어</td><td>재고 수량 불일치</td><td><span class="m-status s-info">● 접수</span></td><td>2026-04-09</td><td><span class="m-btn">상세</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="m-notice">※ 보안 상 실제 화면 미공개 — 동일 기능을 재현한 목업입니다</div>
+    </div>
+  </div>
+
+  <!-- Nginx 상태 모니터링 -->
+  <div class="mockup-wrap">
+    <div class="mockup-bar">
+      <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+      <div class="mockup-url">portal.kia-logistics.internal/admin/infra</div>
+    </div>
+    <div class="mockup-body">
+      <div class="m-topbar"><div class="m-title">⚙ 인프라 운영 현황</div></div>
+      <div class="m-table-wrap">
+        <table class="m-table">
+          <thead>
+            <tr><th>항목</th><th>WAS 1</th><th>WAS 2</th><th>상태</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Nginx 로드밸런싱</td><td>48%</td><td>52%</td><td><span class="m-status s-active">● 정상</span></td></tr>
+            <tr><td>DRM 데몬 상태</td><td>active (running)</td><td>active (running)</td><td><span class="m-status s-active">● 자동 구동</span></td></tr>
+            <tr><td>소나큐브 정적분석</td><td colspan="2">최근 분석: 2026-04-10 · 이슈 0건</td><td><span class="m-status s-active">● 이상 없음</span></td></tr>
+            <tr><td>배치 서버</td><td colspan="2">스케줄 정상 · 최근 실행: 06:30</td><td><span class="m-status s-active">● 정상</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="m-notice">※ 보안 상 실제 화면 미공개 — 동일 기능을 재현한 목업입니다</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="section fade-in" id="result">
+  <div class="section-title">RESULTS &amp; IMPACT</div>
+  <div class="result-grid">
+    <div class="result-item">
+      <span class="result-num">균등</span>
+      <div class="result-label">트래픽 분산 달성</div>
+      <div class="result-desc">Nginx Round Robin 최적화로 WAS 간 부하를 균등하게 분산, 특정 서버 과부하 현상 완전 해소.</div>
+    </div>
+    <div class="result-item">
+      <span class="result-num">100%</span>
+      <div class="result-label">DRM 자동 구동 보장</div>
+      <div class="result-desc">systemd 데몬 등록으로 서버 재기동 후 수동 개입 없이 DRM 서비스 자동 복구.</div>
+    </div>
+    <div class="result-item">
+      <span class="result-num">0건</span>
+      <div class="result-label">모의해킹 보안 지적</div>
+      <div class="result-desc">소나큐브 정적분석 + POST API 설계로 모의해킹 점검사항 선제 대응. 재발 지적 제로.</div>
+    </div>
+    <div class="result-item">
+      <span class="result-num">Full</span>
+      <div class="result-label">단독 운영 커버리지</div>
+      <div class="result-desc">VOC 대응부터 Linux 배포, Nginx 설정, 보안 대응까지 전 영역 단독 담당.</div>
+    </div>
+  </div>
+
+  <!-- Before / After -->
+  <div style="margin-top:1.5rem">
+    <div class="ba-grid">
+      <div class="ba-box">
+        <div class="ba-label before">⚠ BEFORE</div>
+        <ul class="ba-list before">
+          <li>특정 WAS 서버로 <strong>트래픽 집중</strong> — 과부하 발생</li>
+          <li>재기동 시 DRM <strong>수동 실행 필요</strong> — 운영 공백</li>
+          <li>대시보드 연동 URL <strong>차단</strong> — 기능 장애</li>
+          <li>모의해킹 준비 부족 — <strong>대응 시간 낭비</strong></li>
+        </ul>
+      </div>
+      <div class="ba-box">
+        <div class="ba-label after">✓ AFTER</div>
+        <ul class="ba-list after">
+          <li>Nginx Round Robin — <strong>WAS 트래픽 균등 분산</strong></li>
+          <li>systemd 데몬 등록 — <strong>재기동 자동 구동</strong> 보장</li>
+          <li>Location 블록 재설정 — <strong>URL 패턴 선별 허용</strong></li>
+          <li>정적분석 선제 대응 — <strong>모의해킹 지적 0건</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section fade-in">
+  <div class="section-title">TECH STACK</div>
+  <div class="tech-section-grid">
+    <div class="tech-group">
+      <div class="tech-group-label">BACKEND</div>
+      <div class="tech-chips">
+        <span class="tech-chip hl">Java 21</span>
+        <span class="tech-chip hl">Spring Boot</span>
+        <span class="tech-chip">Spring MVC</span>
+        <span class="tech-chip">MyBatis</span>
+        <span class="tech-chip">REST API</span>
+      </div>
+    </div>
+    <div class="tech-group">
+      <div class="tech-group-label">FRONTEND</div>
+      <div class="tech-chips">
+        <span class="tech-chip hl">Thymeleaf</span>
+        <span class="tech-chip">ES6+</span>
+        <span class="tech-chip">agGrid</span>
+        <span class="tech-chip">jQuery</span>
+        <span class="tech-chip">async/await</span>
+      </div>
+    </div>
+    <div class="tech-group">
+      <div class="tech-group-label">DATABASE</div>
+      <div class="tech-chips">
+        <span class="tech-chip hl">MySQL</span>
+        <span class="tech-chip">MyBatis</span>
+      </div>
+    </div>
+    <div class="tech-group">
+      <div class="tech-group-label">INFRA / 보안</div>
+      <div class="tech-chips">
+        <span class="tech-chip hl">Linux</span>
+        <span class="tech-chip hl">Nginx</span>
+        <span class="tech-chip">systemd</span>
+        <span class="tech-chip">SonarQube</span>
+        <span class="tech-chip">DRM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MY ROLE -->
+<section class="section fade-in">
+  <div class="section-title">MY ROLE</div>
+  <div class="role-grid">
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">Nginx 로드밸런싱 최적화 및 보안 라우팅 재설정</span></div>
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">Linux systemd 데몬 등록 — DRM 자동 구동 구현</span></div>
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">협력사 VOC 전담 대응 — UI~백엔드 단독 개발</span></div>
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">소나큐브 정적분석 및 모의해킹 사전 대응</span></div>
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">Batch 서버 배포 및 스케줄 모니터링</span></div>
+    <div class="role-item"><span class="role-icon">◆</span><span class="role-text">외부 DRM 서버 Key 파일 수신 상태 모니터링</span></div>
+  </div>
+
+  <div style="margin-top:1.5rem">
+    <div class="contrib-list">
+      <div class="contrib-item">
+        <div class="contrib-label"><span>Backend</span><span>90%</span></div>
+        <div class="contrib-bar"><div class="contrib-fill" style="width:90%"></div></div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-label"><span>Frontend</span><span>80%</span></div>
+        <div class="contrib-bar"><div class="contrib-fill" style="width:80%"></div></div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-label"><span>Infra / 보안</span><span>95%</span></div>
+        <div class="contrib-bar"><div class="contrib-fill" style="width:95%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section fade-in" style="padding-bottom:2rem">
+  <div class="section-title">TIMELINE</div>
+  <p style="font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-bottom:1.5rem;">2026.01 — 진행중 · 운영 전담</p>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-month">01월</div>
+      <div class="tl-desc"><strong>운영 인수인계</strong> — 시스템 구조 파악, 서버 환경 분석 및 이슈 목록 수집</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-month">02월</div>
+      <div class="tl-desc"><strong>Nginx 최적화</strong> — 로드밸런싱 재설정 · DRM 데몬 등록 · 보안 라우팅 개선</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-month">03월</div>
+      <div class="tl-desc"><strong>모의해킹 대응</strong> — 소나큐브 정적분석 선제 실행, 점검사항 전수 대응</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-month">04월~</div>
+      <div class="tl-desc"><strong>지속 운영</strong> — 긴급 VOC 대응, 배치 모니터링, 요구사항 풀스택 개발 병행</div>
+    </div>
+  </div>
+</section>
+
+<footer class="page-footer">
+  정혜정 · PROJECT PORTFOLIO · 2026 &nbsp;|&nbsp;
+  <a href="index.html">← 전체 포트폴리오 보기</a>
+</footer>
+
+<script>
+// Scroll fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
