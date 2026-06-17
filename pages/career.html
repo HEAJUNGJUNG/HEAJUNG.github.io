@@ -189,8 +189,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
             <li>[외부 DRM 서버 연동] 자동 갱신되는 Key 파일 수신 상태 및 서비스 로그 모니터링</li>
             <li>[시스템 가용성 확보] 서버 재기동 시 DRM 서비스 자동 구동을 위한 .service 파일 작성 및 Linux 서비스 데몬 등록</li>
             <li>[보안라우팅 재설정] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 특정 url 패턴만 허용하도록 Location 블록 재설정</li>
-            <li>[모의해킹 대응] 운영 시스템 대상 모의해킹 결과 보안 취약점 3건 식별 및 조치 검증 · 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 미적용 → OncePerRequestFilter 기반 커스텀 필터로 302 리다이렉트 포함 전체 쿠키 발행 시점 강제 적용 · 파일 업로드 경로 HTML 직접 실행 취약점 → Content-Disposition 헤더 강제 설정으로 브라우저 실행 차단 · QnA 게시판 Stored XSS → Thymeleaf th:utext → th:text 수정으로 HTML 태그 렌더링 차단</li>
-            <li>[보안 취약점대응] WAF FILTER 적용을 통한 XSS / SQL INJECTION 방어 체계 구축</li>
+            <li>[보안취약점 개선] 운영 시스템 대상 모의해킹 결과 보안 취약점 3건 식별 및 조치 검증 · 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 미적용 → OncePerRequestFilter 기반 커스텀 필터로 302 리다이렉트 포함 전체 쿠키 발행 시점 강제 적용 · 파일 업로드 경로 HTML 직접 실행 취약점 → Content-Disposition 헤더 강제 설정으로 브라우저 실행 차단 → Thymeleaf th:utext → th:text 수정으로 HTML 태그 렌더링 차단</li>
           </ul>
         </div>
 
@@ -205,8 +204,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
             <li>[배치 개발] 사용자 Web 발신(SMS) 알림 및 메일 알림 기능 <strong>Spring Batch 구현</strong></li>
             <li>[풀스택 개발] Thymeleaf + ES6+ 프론트엔드 구축, Ajax API 및 async/await 비동기 흐름 제어</li>
             <li>[REST API 구현] 모의해킹 취약점 대비 데이터 처리 API를 POST 방식으로 설계, CSV 업로드 시 DTO 활용으로 안정적인 데이터 매핑 보장</li>
-            <li>[모의해킹 대응] SSO 및 내부 관리자 로그인 플로우 대상 인증 취약점 식별 및 필터 기반 조치 방안 도출·검증</li>
-            <li>[보안 취약점대응] WAF FILTER 적용을 통한 XSS / SQL INJECTION 방어 체계 구축</li>
+            <li>[보안 취약점 개선] 민감 정보(주민등록번호)의 페이로드 노출 취약점 조치를 위해 데이터 구간 암호화를 적용하고, RestTemplate 기반의 내부 서버(Tomcat) API 통신망을 구축하여 데이터 탈취 위험을 원천 차단함 </li>
+            <li>[오픈소스 취약점 조치] Black Duck 보안 진단 결과에 따라 Tomcat, Spring Security, Thymeleaf 등 핵심 의존성 라이브러리를 최신 버전으로 마이그레이션하고, 호환성 이슈를 해결하여 운영 서버에 안정적으로 배포함.</li>
           </ul>
         </div>
 
