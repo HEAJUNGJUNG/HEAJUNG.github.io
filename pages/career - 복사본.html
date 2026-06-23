@@ -137,7 +137,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div>
         <div class="doc-label">경력기술서</div>
         <div class="doc-name">정혜정</div>
-        <div class="doc-role">백엔드 엔지니어 · 거버넌스/보안 아키텍처 · 경력 5년</div>
+        <div class="doc-role">풀스택 개발자 · 경력 5년 · 자동차/방산 도메인</div>
       </div>
       <div class="doc-contact">
         <div class="contact-line"><span class="clabel">Phone</span> 010-3887-2754</div>
@@ -149,9 +149,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
     <div class="section">
       <div class="section-head"><h2>직무 요약</h2></div>
       <div class="summary-box">
-        지난 5년간 국가 방위산업 및 글로벌 완성차 대기업의 엔터프라이즈 시스템을 주도하며, 대규모 트래픽 환경에서의 고가용성 아키텍처 설계와 <strong>데이터 보안 거버넌스 구축</strong>에 집중해 왔습니다.<br><br>
-        특히 사용자 소속 및 역할에 따른 <strong>멀티테넌트(Multi-tenant) 완벽 데이터 격리</strong>, 전사 <strong>SSO 기반 2-Layer 인가(Authorization) 제어</strong>, 그리고 패킷 위변조를 방어하는 <strong>Zero Trust 기반 API 보안</strong>에 특화되어 있습니다.<br><br>
-        단순한 기능 구현을 넘어, 관리자 화면에서 즉시 통제 가능한 <strong>코드리스(Code-less) 동적 권한 체계</strong>를 구축하고 쿼리 튜닝으로 대용량 데이터 처리 속도를 80% 이상 개선하는 등, B2B 엔터프라이즈 플랫폼이 요구하는 수준 높은 신뢰성과 확장성을 추구해 왔습니다.
+        웹 서비스 풀스택 개발과 자동차 도메인의 다양한 경험을 바탕으로, 현재는 인프라 단까지 아우르는 운영 업무를 담당하고 있습니다.
+        주요 기술 스택은 Java 21, Spring Boot, MySQL, Thymeleaf, JavaScript(ES6+), agGrid이며,
+        시스템별 요구사항에 맞는 백엔드 비즈니스 로직 설계와 고도화된 사용자 화면 구현을 주로 담당해왔습니다.
+        특히 <strong>대량 데이터의 지연 없는 그리드 렌더링과 배치성 프로세스 설계</strong>에 특화되어 있으며,
+        소나큐브 정적분석·모의해킹 대응·Nginx 보안 라우팅 등 보안·인프라 영역으로 꾸준히 역량을 확장 중입니다.
       </div>
     </div>
 
@@ -174,50 +176,36 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div class="section-head"><h2>프로젝트 상세</h2></div>
       <div class="proj-list">
 
-        <!-- 기아 군수 원가관리 -->
-        <div class="proj-item">
-          <div class="proj-header">
-            <div class="proj-name">기아 군수 원가관리 시스템 개발·운영</div>
-            <div class="proj-period">2026.02 — 2027.02</div>
-          </div>
-          <div class="proj-role">역할: 보안 아키텍처 개선 및 운영 개발</div>
-          <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, JavaScript(ES6+)</div>
-          <ul class="proj-bullets">
-            <li>[서버 사이드 인가 아키텍처 개편] 모의해킹 취약점(패킷 및 UI 조작을 통한 인가 우회 및 DB 임의 조작) 대응 — 클라이언트 패킷 데이터 기반의 권한 체크 로직을 전면 폐기하고, <strong>세션(Session)에 담긴 검증된 서버 데이터를 기준으로 권한을 최종 체크</strong>하도록 보안 아키텍처를 변경하여 비정상적인 접근 원천 차단</li>
-          </ul>
-        </div>
-
         <div class="proj-item">
           <div class="proj-header">
             <div class="proj-name">기아 군수 협력사포탈 시스템 운영</div>
             <div class="proj-period">2026.01 — 진행중</div>
           </div>
-          <div class="proj-role">역할: 사용자 VOC 대응, 보안 취약점 점검 및 아키텍처 개선, 서버 운영·배포</div>
+          <div class="proj-role">역할: 사용자 VOC 대응, Linux 기반 서버 운영·배포, Batch 서버 모니터링</div>
           <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, Linux, Nginx, agGrid</div>
           <ul class="proj-bullets">
-            <li>[Zero Trust 보안 아키텍처] 모의해킹 시 식별된 패킷 위변조 및 UI 조작(비활성화 버튼 강제 활성화)을 통한 권한 우회 방어를 위해, 클라이언트 요청을 신뢰하지 않고 <strong>DB 트랜잭션 진입 직전 서버 단에서 실제 권한을 최종 검증하는 구조</strong>로 전면 개편</li>
-            <li>[엔터프라이즈 통합 인증(SSO)] 전사 표준 SSO 연동 기반 로그인 구현 및 OncePerRequestFilter를 활용한 <strong>API 접근 통제(2-Layer 권한 분리 아키텍처)</strong> 안정적 운영</li>
-            <li>[고가용성 로드밸런싱] web/was 이중화 환경에서 특정 서버로 트래픽이 몰리는 현상을 nginx server.conf 튜닝으로 <strong>트래픽 균등 분산</strong> 실현</li>
-            <li>[보안 라우팅 & 가용성 확보] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 화이트리스트(Location 블록) 재설정 및 외부 DRM 서버 연동 데몬(.service) 자동화로 보안 서비스 연속성 보장</li>
-            <li>[세션 취약점 조치] 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 강제 적용으로 세션 하이재킹 원천 차단 및 파일 업로드 경로 Content-Disposition 헤더 강제 설정으로 브라우저 실행 취약점 조치</li>
+            <li>[애자일 개발] 긴급 비즈니스 요구사항을 UI 설계부터 백엔드 데이터 연동까지 주도하여 개발</li>
+            <li>[로드밸런싱 최적화] web/was 이중화 환경에서 특정 서버로 트래픽이 몰리는 현상을 nginx server.conf 수정으로 <strong>트래픽 균등 분산</strong></li>
+            <li>[외부 DRM 서버 연동] 자동 갱신되는 Key 파일 수신 상태 및 서비스 로그 모니터링</li>
+            <li>[시스템 가용성 확보] 서버 재기동 시 DRM 서비스 자동 구동을 위한 .service 파일 작성 및 Linux 서비스 데몬 등록</li>
+            <li>[보안라우팅 재설정] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 특정 url 패턴만 허용하도록 Location 블록 재설정</li>
+            <li>[보안취약점 개선] 운영 시스템 대상 모의해킹 결과 보안 취약점 3건 식별 및 조치 검증 · 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 미적용 → OncePerRequestFilter 기반 커스텀 필터로 302 리다이렉트 포함 전체 쿠키 발행 시점 강제 적용 · 파일 업로드 경로 HTML 직접 실행 취약점 → Content-Disposition 헤더 강제 설정으로 브라우저 실행 차단 → Thymeleaf th:utext → th:text 수정으로 HTML 태그 렌더링 차단</li>
           </ul>
         </div>
 
-        <!-- 기아 방산보안포탈 -->
         <div class="proj-item">
           <div class="proj-header">
             <div class="proj-name">기아 방산보안포탈 시스템 개발·운영</div>
             <div class="proj-period">2025.11 — 2026.12</div>
           </div>
-          <div class="proj-role">역할: 방산 자산 관리 시스템 멀티테넌트 아키텍처 및 풀스택 개발</div>
+          <div class="proj-role">역할: 자산 관리 시스템 풀스택 개발 및 서비스 배포·운영</div>
           <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, JavaScript(ES6+), agGrid</div>
           <ul class="proj-bullets">
-            <li>[멀티테넌트 데이터 격리] 시스템 접속 사용자의 소속 및 역할에 따라 DB 접근(Row-level)이 엄격히 통제되도록 <strong>멀티테넌트 기반 데이터 격리망</strong> 완벽 구축</li>
-            <li>[코드리스(Code-less) 동적 인가] 비즈니스 로직 내 하드코딩된 권한 제어를 배제하고, 소스단 배포 없이 <strong>Admin 화면에서 즉시 테넌트/사용자별 권한을 조합하고 통제</strong>할 수 있는 동적 접근 제어 메타데이터 인프라 완성</li>
-            <li>[개인정보 패킷 암호화 및 마스킹] 모의해킹 취약점(개인정보 패킷 탈취를 통한 중요 정보 평문 노출) 조치 — 통신 구간 내 <strong>공개키(Public Key) 기반 패킷 암호화</strong>를 도입하여 탈취 시에도 해독이 불가능하도록 구성하고, 서버 사이드 복호화 및 프론트엔드 데이터 마스킹 강제 적용</li>
-            <li>[어플리케이션 취약점 직접 조치] Black Duck 보안 진단에 따른 어플리케이션 레벨의 취약점을 해결하기 위해, Spring Security, Tomcat 등 <strong>핵심 의존성을 직접 버전업하고 서버 환경에서 테스트 및 검증하여 무중단 마이그레이션을 주도함</strong></li>
-            <li>[배치 및 풀스택 개발] 대용량 사용자 Web 발신(SMS)/메일 알림 기능 Spring Batch 구현 및 Thymeleaf + ES6+ 기반 프론트엔드 비동기 흐름 제어(async/await) 최적화</li>
-			<li>[오픈소스 컴플라이언스 확보] Black Duck 코드 진단 결과 도출된 어플리케이션 단의 취약점을 직접 분석하고, <strong>라이브러리 버전 업그레이드 및 운영 서버 테스트를 주도하여 안전하게 배포함</strong></li>
+            <li>[배치 개발] 사용자 Web 발신(SMS) 알림 및 메일 알림 기능 <strong>Spring Batch 구현</strong></li>
+            <li>[풀스택 개발] Thymeleaf + ES6+ 프론트엔드 구축, Ajax API 및 async/await 비동기 흐름 제어</li>
+            <li>[REST API 구현] 모의해킹 취약점 대비 데이터 처리 API를 POST 방식으로 설계, CSV 업로드 시 DTO 활용으로 안정적인 데이터 매핑 보장</li>
+            <li>[보안 취약점 개선] 민감 정보(주민등록번호)의 페이로드 노출 취약점 조치를 위해 데이터 구간 암호화를 적용하고, RestTemplate 기반의 내부 서버(Tomcat) API 통신망을 구축하여 데이터 탈취 위험을 원천 차단함 </li>
+            <li>[오픈소스 취약점 조치] Black Duck 보안 진단 결과에 따라 Tomcat, Spring Security, Thymeleaf 등 핵심 의존성 라이브러리를 최신 버전으로 마이그레이션 및 호환성 이슈를 해결하여 운영 서버에 안정적으로 배포.</li>
           </ul>
         </div>
 
@@ -256,7 +244,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
           <div class="proj-role">역할: 대량 데이터 처리 로직 개선 및 쿼리 튜닝 (Performance Tuning)</div>
           <div class="proj-tech">Tech: Oracle, PL/SQL, Java, Spring MVC, Batch</div>
           <ul class="proj-bullets">
-            <li>[속도 80% 개선] BOM 조회 로직 내 불필요한 Cursor 반복 제거 및 Full Scan 제거 — <strong>응답속도 5분 → 1분 미만 획기적 단축</strong></li>
+            <li>[속도 80% 개선] BOM 조회 로직 내 불필요한 Cursor 반복 제거 및 Full Scan 제거 — <strong>응답속도 5분 → 1분 미만</strong></li>
             <li>[대량 데이터 파싱] Apache POI로 엑셀 형태 대량 부품 데이터 파싱 후 DB 일괄 적재, 데이터 검증 로직 추가로 안정성 보장</li>
           </ul>
         </div>
@@ -269,8 +257,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
           <div class="proj-role">역할: 타 시스템 부품 정보 동기화 프로시저 개발 및 배치 설정</div>
           <div class="proj-tech">Tech: Java, Spring MVC, Oracle, iBatis</div>
           <ul class="proj-bullets">
-            <li>[동적 메타데이터 분리] 비즈니스 로직 내 하드코딩 값을 DB 기반 메타데이터(공통 코드/규칙 테이블)로 분리 — 코드 수정 없이 즉시 오류 수정 가능하도록 재설계하여 <strong>운영비용 절감 및 정책 기반 접근 제어 토대 마련</strong></li>
-            <li>[데이터 처리 성능 최적화] 순차 처리 방식을 집합(Set) 기반 일괄처리로 재설계 — 메모리 점유 및 속도 저하 해소</li>
+            <li>[코드 리팩토링] 비즈니스 로직 내 하드코딩 값을 DB 기반 메타데이터(공통 코드/규칙 테이블)로 분리 — 코드 수정 없이 즉시 오류 수정 가능하도록 재설계, <strong>운영비용 절감</strong></li>
+            <li>[데이터 처리 성능 최적화] 순차 처리 방식을 집합(Set) 기반 일괄처리로 재설계 — 메모리 점유·속도 저하 해소</li>
           </ul>
         </div>
 
@@ -348,12 +336,12 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div class="section-head"><h2>기술 스택</h2></div>
       <div class="skills-grid">
         <div class="sg-group">
-          <div class="sg-title">Backend & Security</div>
+          <div class="sg-title">Backend</div>
           <div class="sg-items">
             <div class="sg-item"><span class="sg-name">Java 21 / Spring Boot</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
-            <div class="sg-item"><span class="sg-name">Spring Security / SSO 연동</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
-            <div class="sg-item"><span class="sg-name">Spring Batch / RESTful API</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
+            <div class="sg-item"><span class="sg-name">Spring Batch</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
             <div class="sg-item"><span class="sg-name">MyBatis / iBatis</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
+            <div class="sg-item"><span class="sg-name">RESTful API</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
           </div>
         </div>
         <div class="sg-group">
