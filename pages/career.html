@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark"><head>
+<html lang="ko" data-theme="light"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>경력기술서 · 정혜정</title>
@@ -121,8 +121,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
     <span>career.html · PDF 저장 → 인쇄 → PDF로 저장</span>
     <div class="bar-actions">
       <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">
-        <span id="themeIcon">☾</span>
-        <span id="themeLabel">다크 모드</span>
+        <span id="themeIcon">☀</span>
+        <span id="themeLabel">라이트 모드</span>
       </button>
       <button class="print-btn" onclick="window.print()">인쇄</button>
       <button class="print-btn" id="pdfBtn" onclick="downloadPDF()">PDF 저장</button>
@@ -182,7 +182,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div style="font-size:11px;color:#555;margin-top:2px">2025.11 — 2026.12</div>
     </div>
   
-    <div style="padding: 0.75rem 1rem; background: rgb(10, 10, 15); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(3)">
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(3)">
       <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">사내 인트라넷 개발 (휴가/근태 관리)</div>
       <div style="font-size:11px;color:#555;margin-top:2px">2025.03 — 2025.10</div>
     </div>
@@ -335,6 +335,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
             <li>[보안 감사 로그 시스템 &amp; DB I/O 최적화] 감사 및 사용자 행위 추적을 목표로, 데이터 변경이나 조회(Mapper 실행)가 일어나는 시점에 실시간으로 접속 기록을 수집하는 백엔드 시스템 개발</li>
             <li>[Spring AOP 기반 비침습적 가로채기] 기 구축된 비즈니스 로직에 영향(Side-effect)을 주지 않기 위해 Spring AOP를 도입, 매퍼 레이어 실행 시점에 유저 세션 정보를 동적으로 가로채는 비침습적(Non-invasive) 아키텍처 구현 (관심사의 분리 달성)</li>
             <li>[인메모리 버퍼링 및 임계치 기반 벌크 저장] 실시간 DB I/O로 인한 서버 부하 및 커넥션 풀 고갈을 방지하기 위해, 수집된 로그를 동시성이 보장된 ConcurrentLinkedQueue에 임시 적재한 후, 설정한 임계치(Threshold) 도달 시에만 MyBatis 를 통해 벌크(Bulk) 인서트 되도록 설계</li>
+            <li>[스케줄러 기반 데이터 유실 방지] 트래픽이 낮아 임계치를 채우지 못하고 사용자가 이탈하는 예외 케이스를 커버하기 위해, 30초 주기의 Spring Scheduler를 이중 백업 트리거로 가동하여 메모리에 남은 잔여 로그를 안전하게 상시 Flush 하도록 데이터 정합성 보장</li>
           </ul>
         </div>
 
@@ -856,4 +857,4 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
 });
 </script>
 
-<div id="synofoto-browser-extension-loaded"></div></body></html>
+<div id="synofoto-browser-extension-loaded"></div><div id="synofoto-browser-extension-loaded"></div><div syno-id="autofill-icon"></div><div syno-id="autofill-dropdown"></div></body></html>
