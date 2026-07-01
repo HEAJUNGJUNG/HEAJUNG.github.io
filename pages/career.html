@@ -187,12 +187,12 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div style="font-size:11px;color:#555;margin-top:2px">2025.03 — 2025.10</div>
     </div>
   
-    <div style="padding: 0.75rem 1rem; background: rgb(10, 10, 15); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(4)">
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(4)">
       <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">리액트 변환 프로젝트</div>
       <div style="font-size:11px;color:#555;margin-top:2px">2025.01 — 2025.02</div>
     </div>
   
-    <div style="padding: 0.75rem 1rem; background: rgb(10, 10, 15); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(5)">
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(5)">
       <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 상용 시작차 관리 시스템 개발</div>
       <div style="font-size:11px;color:#555;margin-top:2px">2024.10 — 2025.03</div>
     </div>
@@ -327,14 +327,14 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
           <div class="proj-role">역할: 사용자 VOC 대응, 보안 취약점 점검 및 아키텍처 개선, 서버 운영·배포</div>
           <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, Linux, Nginx, agGrid</div>
           <ul class="proj-bullets">
-            <li>[Zero Trust 보안 아키텍처] 모의해킹 시 식별된 패킷 위변조 및 UI 조작(비활성화 버튼 강제 활성화)을 통한 권한 우회 방어를 위해, 클라이언트 요청을 신뢰하지 않고 <strong>DB 트랜잭션 진입 직전 서버 단에서 실제 권한을 최종 검증하는 구조</strong>로 전면 개편</li>
-            <li>[엔터프라이즈 통합 인증(SSO)] 전사 표준 SSO 연동 기반 로그인 구현 및 OncePerRequestFilter를 활용한 <strong>API 접근 통제(2-Layer 권한 분리 아키텍처)</strong> 안정적 운영</li>
-            <li>[고가용성 로드밸런싱] web/was 이중화 환경에서 특정 서버로 트래픽이 몰리는 현상을 nginx server.conf 튜닝으로 <strong>트래픽 균등 분산</strong> 실현</li>
+            <li>[Zero Trust 보안 아키텍처] 모의해킹 시 식별된 패킷 위변조 및 UI 조작(비활성화 버튼 강제 활성화)을 통한 권한 우회 방어를 위해, 클라이언트 요청을 신뢰하지 않고 DB 트랜잭션 진입 직전 서버 단에서 실제 권한을 최종 검증하는 구조로 전면 개편</li>
+            <li>[엔터프라이즈 통합 인증(SSO)] 전사 표준 SSO 연동 기반 로그인 구현 및 OncePerRequestFilter를 활용한 API 접근 통제(2-Layer 권한 분리 아키텍처) 안정적 운영</li>
+            <li>[고가용성 로드밸런싱] web/was 이중화 환경에서 특정 서버로 트래픽이 몰리는 현상을 nginx server.conf 튜닝으로 트래픽 균등 분산 실현</li>
             <li>[보안 라우팅 &amp; 가용성 확보] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 화이트리스트(Location 블록) 재설정 및 외부 DRM 서버 연동 데몬(.service) 자동화로 보안 서비스 연속성 보장</li>
             <li>[세션 취약점 조치] 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 강제 적용으로 세션 하이재킹 원천 차단 및 파일 업로드 경로 Content-Disposition 헤더 강제 설정으로 브라우저 실행 취약점 조치</li>
             <li>[보안 감사 로그 시스템 &amp; DB I/O 최적화] 감사 및 사용자 행위 추적을 목표로, 데이터 변경이나 조회(Mapper 실행)가 일어나는 시점에 실시간으로 접속 기록을 수집하는 백엔드 시스템 개발</li>
             <li>[Spring AOP 기반 비침습적 가로채기] 기 구축된 비즈니스 로직에 영향(Side-effect)을 주지 않기 위해 Spring AOP를 도입, 매퍼 레이어 실행 시점에 유저 세션 정보를 동적으로 가로채는 비침습적(Non-invasive) 아키텍처 구현 (관심사의 분리 달성)</li>
-            <li>[인메모리 버퍼링 및 임계치 기반 벌크 저장] 실시간 DB I/O로 인한 서버 부하 및 커넥션 풀 고갈을 방지하기 위해, 수집된 로그를 동시성이 보장된 ConcurrentLinkedQueue에 임시 적재한 후, 설정한 임계치(Threshold) 도달 시에만 MyBatis <foreach>를 통해 벌크(Bulk) 인서트 되도록 설계</foreach></li>
+            <li>[인메모리 버퍼링 및 임계치 기반 벌크 저장] 실시간 DB I/O로 인한 서버 부하 및 커넥션 풀 고갈을 방지하기 위해, 수집된 로그를 동시성이 보장된 ConcurrentLinkedQueue에 임시 적재한 후, 설정한 임계치(Threshold) 도달 시에만 MyBatis 를 통해 벌크(Bulk) 인서트 되도록 설계</li>
           </ul>
         </div>
 
