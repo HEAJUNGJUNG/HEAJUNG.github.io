@@ -127,8 +127,82 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       </button>
       <button class="print-btn" onclick="window.print()">인쇄</button>
       <button class="print-btn" id="pdfBtn" onclick="downloadPDF()">PDF 저장</button>
+      <button class="theme-toggle" id="adminBtn" onclick="openAdminAuth()" style="display:none">🔐 편집</button>
     </div>
   </div>
+
+  <!-- 인증 모달 -->
+  <div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:none;align-items:center;justify-content:center;">
+    <div style="background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:2rem;width:340px;max-width:90vw;">
+      <div style="font-family:monospace;font-size:13px;color:#aaa;margin-bottom:1.25rem;letter-spacing:.05em">🔐 관리자 인증</div>
+      <input id="secretInput" type="password" placeholder="시크릿 키 입력"
+        style="width:100%;padding:10px 14px;background:#0a0a0f;border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:13px;outline:none;margin-bottom:.75rem"
+        onkeydown="if(event.key==='Enter')verifySecret()">
+      <div id="authError" style="font-size:12px;color:#ff6b6b;min-height:18px;margin-bottom:.75rem"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="verifySecret()" style="flex:1;padding:9px;background:#7c6fff;color:#fff;border:none;border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">확인</button>
+        <button onclick="closeAuthModal()" style="flex:1;padding:9px;background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.15);border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 편집 패널 -->
+  <div id="editPanel" style="display:none;position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;background:#111118;border-left:1px solid rgba(255,255,255,.08);z-index:9998;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,.5);">
+    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:monospace;font-size:13px;color:#e8e8f0">✏️ 경력기술서 편집</span>
+      <button onclick="closeEditPanel()" style="background:none;border:none;color:#666;cursor:pointer;font-size:18px;padding:0">✕</button>
+    </div>
+
+    <div style="padding:1.25rem 1.5rem;">
+      <!-- GitHub 설정 -->
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem">GitHub 설정</div>
+        <input id="ghToken" type="password" placeholder="GitHub Personal Access Token"
+          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
+        <input id="ghRepo" type="text" placeholder="owner/repo (예: heajungjung/HEAJUNG.github.io)"
+          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
+        <input id="ghPath" type="text" placeholder="파일 경로 (예: pages/career.html)"
+          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none">
+        <div style="font-size:11px;color:#444;margin-top:.4rem">설정은 localStorage에 저장됩니다</div>
+        <button onclick="saveGhConfig()" style="margin-top:.6rem;padding:6px 14px;background:#2a2a38;color:#aaa;border:1px solid rgba(255,255,255,.1);border-radius:4px;font-family:monospace;font-size:11px;cursor:pointer">저장</button>
+      </div>
+
+      <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:1.5rem"></div>
+
+      <!-- 프로젝트 목록 -->
+      <div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem">프로젝트 관리</div>
+      <button onclick="openAddProject()" style="width:100%;padding:10px;background:#1a1a28;border:1px dashed rgba(124,111,255,.4);border-radius:4px;color:#7c6fff;font-family:monospace;font-size:12px;cursor:pointer;margin-bottom:1rem">+ 새 프로젝트 추가</button>
+      <div id="projEditList"></div>
+    </div>
+  </div>
+
+  <!-- 프로젝트 편집 모달 -->
+  <div id="projModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:10000;align-items:center;justify-content:center;">
+    <div style="background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:1.75rem;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;">
+      <div style="font-family:monospace;font-size:13px;color:#e8e8f0;margin-bottom:1.25rem" id="projModalTitle">프로젝트 추가</div>
+
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <input id="pName" type="text" placeholder="프로젝트명" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:13px;outline:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+          <input id="pPeriodStart" type="text" placeholder="시작 (예: 2025.01)" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none">
+          <input id="pPeriodEnd" type="text" placeholder="종료 (예: 2025.06 또는 진행중)" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none">
+        </div>
+        <input id="pRole" type="text" placeholder="역할" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:13px;outline:none">
+        <input id="pTech" type="text" placeholder="Tech: Java 21, Spring Boot, ..." style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none">
+        <textarea id="pBullets" placeholder="주요 업무 (줄바꿈으로 항목 구분, **굵게** 사용 가능)" rows="6"
+          style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none;resize:vertical;line-height:1.6;font-family:inherit"></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:1.25rem">
+        <button onclick="saveProject()" style="flex:1;padding:10px;background:#7c6fff;color:#fff;border:none;border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">저장</button>
+        <button id="deleteProjectBtn" onclick="deleteProject()" style="padding:10px 16px;background:#2a1a1a;color:#ff6b6b;border:1px solid rgba(255,107,107,.3);border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer;display:none">삭제</button>
+        <button onclick="closeProjModal()" style="flex:1;padding:10px;background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.12);border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 저장 상태 토스트 -->
+  <div id="toast" style="display:none;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a28;border:1px solid rgba(124,111,255,.4);color:#e8e8f0;padding:10px 20px;border-radius:6px;font-family:monospace;font-size:13px;z-index:10001;white-space:nowrap"></div>
 
   <div class="doc">
 
@@ -417,6 +491,266 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+// ── 설정 ──────────────────────────────────────────────
+// 시크릿 키: 아래 값을 원하는 키로 변경하세요
+const SECRET_KEY = 'heajung2024!';
+
+// ── 인증 ──────────────────────────────────────────────
+function isAuthenticated() {
+  return sessionStorage.getItem('admin_auth') === 'ok';
+}
+
+function openAdminAuth() {
+  if (isAuthenticated()) {
+    openEditPanel();
+    return;
+  }
+  const m = document.getElementById('authModal');
+  m.style.display = 'flex';
+  setTimeout(() => document.getElementById('secretInput').focus(), 50);
+}
+
+function closeAuthModal() {
+  document.getElementById('authModal').style.display = 'none';
+  document.getElementById('secretInput').value = '';
+  document.getElementById('authError').textContent = '';
+}
+
+function verifySecret() {
+  const val = document.getElementById('secretInput').value;
+  if (val === SECRET_KEY) {
+    sessionStorage.setItem('admin_auth', 'ok');
+    closeAuthModal();
+    openEditPanel();
+  } else {
+    document.getElementById('authError').textContent = '❌ 키가 올바르지 않습니다';
+    document.getElementById('secretInput').value = '';
+    document.getElementById('secretInput').focus();
+  }
+}
+
+// ── 편집 패널 ──────────────────────────────────────────
+function openEditPanel() {
+  loadGhConfig();
+  renderProjEditList();
+  document.getElementById('editPanel').style.display = 'block';
+}
+
+function closeEditPanel() {
+  document.getElementById('editPanel').style.display = 'none';
+}
+
+// ── GitHub 설정 저장/로드 ──────────────────────────────
+function saveGhConfig() {
+  localStorage.setItem('gh_token', document.getElementById('ghToken').value);
+  localStorage.setItem('gh_repo', document.getElementById('ghRepo').value);
+  localStorage.setItem('gh_path', document.getElementById('ghPath').value);
+  showToast('✅ 설정 저장됨');
+}
+
+function loadGhConfig() {
+  document.getElementById('ghToken').value = localStorage.getItem('gh_token') || '';
+  document.getElementById('ghRepo').value = localStorage.getItem('gh_repo') || '';
+  document.getElementById('ghPath').value = localStorage.getItem('gh_path') || '';
+}
+
+// ── 프로젝트 데이터 파싱 (DOM → JS 객체) ─────────────
+function parseProjectsFromDOM() {
+  const items = document.querySelectorAll('.proj-list .proj-item');
+  return Array.from(items).map((el, idx) => ({
+    idx,
+    name: el.querySelector('.proj-name')?.textContent.trim() || '',
+    period: el.querySelector('.proj-period')?.textContent.trim() || '',
+    role: el.querySelector('.proj-role')?.textContent.replace('역할: ', '').trim() || '',
+    tech: el.querySelector('.proj-tech')?.textContent.trim() || '',
+    bullets: Array.from(el.querySelectorAll('.proj-bullets li')).map(li => li.innerHTML.trim()),
+    el
+  }));
+}
+
+// ── 프로젝트 목록 렌더 (편집 패널) ───────────────────
+function renderProjEditList() {
+  const list = document.getElementById('projEditList');
+  const projs = parseProjectsFromDOM();
+  list.innerHTML = projs.map(p => `
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s"
+      onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"
+      onclick="openEditProject(${p.idx})">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">${p.name}</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">${p.period}</div>
+    </div>
+  `).join('');
+}
+
+// ── **굵게** → <strong> 변환 ──────────────────────────
+function mdToHtml(text) {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+function htmlToMd(html) {
+  return html.replace(/<strong>(.*?)<\/strong>/g, '**$1**')
+             .replace(/<[^>]+>/g, '');
+}
+
+// ── 프로젝트 추가 모달 ────────────────────────────────
+let editingIdx = null;
+
+function openAddProject() {
+  editingIdx = null;
+  document.getElementById('projModalTitle').textContent = '새 프로젝트 추가';
+  document.getElementById('deleteProjectBtn').style.display = 'none';
+  ['pName','pPeriodStart','pPeriodEnd','pRole','pTech','pBullets'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('projModal').style.display = 'flex';
+}
+
+function openEditProject(idx) {
+  const projs = parseProjectsFromDOM();
+  const p = projs[idx];
+  editingIdx = idx;
+  document.getElementById('projModalTitle').textContent = '프로젝트 수정';
+  document.getElementById('deleteProjectBtn').style.display = 'block';
+  document.getElementById('pName').value = p.name;
+  const parts = p.period.split('—').map(s => s.trim());
+  document.getElementById('pPeriodStart').value = parts[0] || '';
+  document.getElementById('pPeriodEnd').value = parts[1] || '';
+  document.getElementById('pRole').value = p.role;
+  document.getElementById('pTech').value = p.tech;
+  document.getElementById('pBullets').value = p.bullets.map(b => htmlToMd(b)).join('\n');
+  document.getElementById('projModal').style.display = 'flex';
+  closeEditPanel();
+}
+
+function closeProjModal() {
+  document.getElementById('projModal').style.display = 'none';
+  openEditPanel();
+}
+
+// ── 프로젝트 저장 (DOM 직접 수정 후 GitHub 커밋) ──────
+function buildProjItemHTML(data) {
+  const bulletsHTML = data.bullets.map(b => `            <li>${mdToHtml(b)}</li>`).join('\n');
+  return `        <div class="proj-item">
+          <div class="proj-header">
+            <div class="proj-name">${data.name}</div>
+            <div class="proj-period">${data.period}</div>
+          </div>
+          <div class="proj-role">역할: ${data.role}</div>
+          <div class="proj-tech">${data.tech}</div>
+          <ul class="proj-bullets">
+${bulletsHTML}
+          </ul>
+        </div>`;
+}
+
+function saveProject() {
+  const name = document.getElementById('pName').value.trim();
+  const start = document.getElementById('pPeriodStart').value.trim();
+  const end = document.getElementById('pPeriodEnd').value.trim();
+  const role = document.getElementById('pRole').value.trim();
+  const tech = document.getElementById('pTech').value.trim();
+  const bulletsRaw = document.getElementById('pBullets').value.trim();
+
+  if (!name) { alert('프로젝트명을 입력하세요'); return; }
+
+  const bullets = bulletsRaw.split('\n').filter(l => l.trim());
+  const period = end ? `${start} — ${end}` : start;
+  const data = { name, period, role, tech, bullets };
+
+  const projList = document.querySelector('.proj-list');
+  const newEl = document.createElement('div');
+  newEl.className = 'proj-item';
+  newEl.innerHTML = buildProjItemHTML(data).replace('<div class="proj-item">', '').replace(/^[\s\S]*?<div class="proj-header"/, '<div class="proj-header"');
+
+  // 올바른 innerHTML 구성
+  const tmpDiv = document.createElement('div');
+  tmpDiv.innerHTML = buildProjItemHTML(data);
+  const newProjEl = tmpDiv.querySelector('.proj-item');
+
+  if (editingIdx !== null) {
+    const projs = parseProjectsFromDOM();
+    projs[editingIdx].el.replaceWith(newProjEl);
+  } else {
+    projList.insertBefore(newProjEl, projList.firstChild);
+  }
+
+  closeProjModal();
+  commitToGitHub();
+}
+
+function deleteProject() {
+  if (!confirm('이 프로젝트를 삭제할까요?')) return;
+  if (editingIdx !== null) {
+    const projs = parseProjectsFromDOM();
+    projs[editingIdx].el.remove();
+  }
+  closeProjModal();
+  commitToGitHub();
+}
+
+// ── GitHub API 커밋 ────────────────────────────────────
+async function commitToGitHub() {
+  const token = localStorage.getItem('gh_token');
+  const repo  = localStorage.getItem('gh_repo');
+  const path  = localStorage.getItem('gh_path');
+
+  if (!token || !repo || !path) {
+    showToast('⚠️ GitHub 설정을 먼저 입력하세요', 3000);
+    return;
+  }
+
+  showToast('⏳ GitHub에 저장 중...');
+
+  try {
+    // 현재 파일 SHA 가져오기
+    const infoRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    const info = await infoRes.json();
+    if (!info.sha) throw new Error('파일 SHA를 가져올 수 없습니다: ' + JSON.stringify(info));
+
+    // 현재 HTML 직렬화
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+
+    // 커밋
+    const commitRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `[career] 프로젝트 정보 업데이트 (${new Date().toLocaleDateString('ko-KR')})`,
+        content: encoded,
+        sha: info.sha
+      })
+    });
+
+    if (commitRes.ok) {
+      showToast('✅ GitHub에 저장 완료! 잠시 후 반영됩니다', 3500);
+    } else {
+      const err = await commitRes.json();
+      throw new Error(err.message);
+    }
+  } catch (e) {
+    showToast('❌ 저장 실패: ' + e.message, 4000);
+    console.error(e);
+  }
+}
+
+// ── 토스트 ─────────────────────────────────────────────
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.display = 'none', duration);
+}
+
+// ── 초기화: 관리자 버튼 노출 ──────────────────────────
+// 항상 노출 (시크릿 키로 인증)
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('adminBtn').style.display = 'flex';
+});
+</script>
 <script>
 function downloadPDF() {
   const btn = document.getElementById('pdfBtn');
