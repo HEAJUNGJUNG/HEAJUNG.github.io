@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
+<html lang="ko" data-theme="dark"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>경력기술서 · 정혜정</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;family=Noto+Serif+KR:wght@400;600&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-page: #f2f2ef; --bg-doc: #ffffff; --bg-muted: #f8f8f6; --bg-tag: #f2f2ef;
@@ -122,22 +121,20 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
     <span>career.html · PDF 저장 → 인쇄 → PDF로 저장</span>
     <div class="bar-actions">
       <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">
-        <span id="themeIcon">☀</span>
-        <span id="themeLabel">라이트 모드</span>
+        <span id="themeIcon">☾</span>
+        <span id="themeLabel">다크 모드</span>
       </button>
       <button class="print-btn" onclick="window.print()">인쇄</button>
       <button class="print-btn" id="pdfBtn" onclick="downloadPDF()">PDF 저장</button>
-      <button class="theme-toggle" id="adminBtn" onclick="openAdminAuth()" style="display:none">🔐 편집</button>
+      <button class="theme-toggle" id="adminBtn" onclick="openAdminAuth()" style="display: flex;">🔐 편집</button>
     </div>
   </div>
 
   <!-- 인증 모달 -->
-  <div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:none;align-items:center;justify-content:center;">
+  <div id="authModal" style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.7); z-index: 9999; display: none; align-items: center; justify-content: center;">
     <div style="background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:2rem;width:340px;max-width:90vw;">
       <div style="font-family:monospace;font-size:13px;color:#aaa;margin-bottom:1.25rem;letter-spacing:.05em">🔐 관리자 인증</div>
-      <input id="secretInput" type="password" placeholder="시크릿 키 입력"
-        style="width:100%;padding:10px 14px;background:#0a0a0f;border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:13px;outline:none;margin-bottom:.75rem"
-        onkeydown="if(event.key==='Enter')verifySecret()">
+      <input id="secretInput" type="password" placeholder="시크릿 키 입력" style="width:100%;padding:10px 14px;background:#0a0a0f;border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:13px;outline:none;margin-bottom:.75rem" onkeydown="if(event.key==='Enter')verifySecret()">
       <div id="authError" style="font-size:12px;color:#ff6b6b;min-height:18px;margin-bottom:.75rem"></div>
       <div style="display:flex;gap:8px">
         <button onclick="verifySecret()" style="flex:1;padding:9px;background:#7c6fff;color:#fff;border:none;border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">확인</button>
@@ -147,7 +144,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
   </div>
 
   <!-- 편집 패널 -->
-  <div id="editPanel" style="display:none;position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;background:#111118;border-left:1px solid rgba(255,255,255,.08);z-index:9998;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,.5);">
+  <div id="editPanel" style="display: block; position: fixed; top: 0px; right: 0px; width: 480px; max-width: 95vw; height: 100vh; background: rgb(17, 17, 24); border-left: 1px solid rgba(255, 255, 255, 0.08); z-index: 9998; overflow-y: auto; box-shadow: rgba(0, 0, 0, 0.5) -8px 0px 40px;">
     <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;">
       <span style="font-family:monospace;font-size:13px;color:#e8e8f0">✏️ 경력기술서 편집</span>
       <button onclick="closeEditPanel()" style="background:none;border:none;color:#666;cursor:pointer;font-size:18px;padding:0">✕</button>
@@ -157,12 +154,9 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <!-- GitHub 설정 -->
       <div style="margin-bottom:1.5rem">
         <div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem">GitHub 설정</div>
-        <input id="ghToken" type="password" placeholder="GitHub Personal Access Token"
-          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
-        <input id="ghRepo" type="text" placeholder="owner/repo (예: heajungjung/HEAJUNG.github.io)"
-          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
-        <input id="ghPath" type="text" placeholder="파일 경로 (예: pages/career.html)"
-          style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none">
+        <input id="ghToken" type="password" placeholder="GitHub Personal Access Token" style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
+        <input id="ghRepo" type="text" placeholder="owner/repo (예: heajungjung/HEAJUNG.github.io)" style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;margin-bottom:.5rem">
+        <input id="ghPath" type="text" placeholder="파일 경로 (예: pages/career.html)" style="width:100%;padding:8px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none">
         <div style="font-size:11px;color:#444;margin-top:.4rem">설정은 localStorage에 저장됩니다</div>
         <button onclick="saveGhConfig()" style="margin-top:.6rem;padding:6px 14px;background:#2a2a38;color:#aaa;border:1px solid rgba(255,255,255,.1);border-radius:4px;font-family:monospace;font-size:11px;cursor:pointer">저장</button>
       </div>
@@ -172,14 +166,79 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <!-- 프로젝트 목록 -->
       <div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem">프로젝트 관리</div>
       <button onclick="openAddProject()" style="width:100%;padding:10px;background:#1a1a28;border:1px dashed rgba(124,111,255,.4);border-radius:4px;color:#7c6fff;font-family:monospace;font-size:12px;cursor:pointer;margin-bottom:1rem">+ 새 프로젝트 추가</button>
-      <div id="projEditList"></div>
+      <div id="projEditList">
+    <div style="padding: 0.75rem 1rem; background: rgb(10, 10, 15); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(0)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">기아 군수 원가관리 시스템 개발·운영</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2026.02 — 2027.02</div>
+    </div>
+  
+    <div style="padding: 0.75rem 1rem; background: rgb(10, 10, 15); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 4px; margin-bottom: 0.5rem; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(1)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">기아 군수 협력사포탈 시스템 운영</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2026.01 — 진행중</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(2)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">기아 방산보안포탈 시스템 개발·운영</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2025.11 — 2026.12</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(3)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">사내 인트라넷 개발 (휴가/근태 관리)</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2025.03 — 2025.10</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(4)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">리액트 변환 프로젝트</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2025.01 — 2025.02</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(5)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 상용 시작차 관리 시스템 개발</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2024.10 — 2025.03</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(6)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 전자 부품 시스템 개발</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2024.07 — 2024.12</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(7)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">기아 군수 재원관리 시스템 개발</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2024.06 — 2024.07</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(8)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 주행 데이터 시각화 프로젝트</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2023.05 — 2023.09</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(9)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">군수 정비 시스템 넥사크로 변환 프로젝트</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2023.10 — 2024.04</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(10)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">기아 군수 중량 관리 시스템 개발</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2022.09 — 2023.02</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(11)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 소프트웨어 업데이트 관리 시스템 개선</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2022.05 — 2022.08</div>
+    </div>
+  
+    <div style="padding:.75rem 1rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.07);border-radius:4px;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(124,111,255,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'" onclick="openEditProject(12)">
+      <div style="font-size:12.5px;color:#e8e8f0;font-weight:500">현대 네트워크 통합개발 지원 사내시스템 개선</div>
+      <div style="font-size:11px;color:#555;margin-top:2px">2022.03 — 2022.05</div>
+    </div>
+  </div>
     </div>
   </div>
 
   <!-- 프로젝트 편집 모달 -->
-  <div id="projModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:10000;align-items:center;justify-content:center;">
+  <div id="projModal" style="display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center;">
     <div style="background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:1.75rem;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;">
-      <div style="font-family:monospace;font-size:13px;color:#e8e8f0;margin-bottom:1.25rem" id="projModalTitle">프로젝트 추가</div>
+      <div style="font-family:monospace;font-size:13px;color:#e8e8f0;margin-bottom:1.25rem" id="projModalTitle">프로젝트 수정</div>
 
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <input id="pName" type="text" placeholder="프로젝트명" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:13px;outline:none">
@@ -189,20 +248,19 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
         </div>
         <input id="pRole" type="text" placeholder="역할" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:13px;outline:none">
         <input id="pTech" type="text" placeholder="Tech: Java 21, Spring Boot, ..." style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none">
-        <textarea id="pBullets" placeholder="주요 업무 (줄바꿈으로 항목 구분, **굵게** 사용 가능)" rows="6"
-          style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none;resize:vertical;line-height:1.6;font-family:inherit"></textarea>
+        <textarea id="pBullets" placeholder="주요 업무 (줄바꿈으로 항목 구분, **굵게** 사용 가능)" rows="6" style="padding:9px 12px;background:#0a0a0f;border:1px solid rgba(255,255,255,.12);border-radius:4px;color:#e8e8f0;font-size:12px;outline:none;resize:vertical;line-height:1.6;font-family:inherit"></textarea>
       </div>
 
       <div style="display:flex;gap:8px;margin-top:1.25rem">
         <button onclick="saveProject()" style="flex:1;padding:10px;background:#7c6fff;color:#fff;border:none;border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">저장</button>
-        <button id="deleteProjectBtn" onclick="deleteProject()" style="padding:10px 16px;background:#2a1a1a;color:#ff6b6b;border:1px solid rgba(255,107,107,.3);border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer;display:none">삭제</button>
+        <button id="deleteProjectBtn" onclick="deleteProject()" style="padding: 10px 16px; background: rgb(42, 26, 26); color: rgb(255, 107, 107); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 4px; font-family: monospace; font-size: 12px; cursor: pointer; display: block;">삭제</button>
         <button onclick="closeProjModal()" style="flex:1;padding:10px;background:transparent;color:#aaa;border:1px solid rgba(255,255,255,.12);border-radius:4px;font-family:monospace;font-size:12px;cursor:pointer">취소</button>
       </div>
     </div>
   </div>
 
   <!-- 저장 상태 토스트 -->
-  <div id="toast" style="display:none;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a28;border:1px solid rgba(124,111,255,.4);color:#e8e8f0;padding:10px 20px;border-radius:6px;font-family:monospace;font-size:13px;z-index:10001;white-space:nowrap"></div>
+  <div id="toast" style="display: block; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgb(26, 26, 40); border: 1px solid rgba(124, 111, 255, 0.4); color: rgb(232, 232, 240); padding: 10px 20px; border-radius: 6px; font-family: monospace; font-size: 13px; z-index: 10001; white-space: nowrap;">⏳ GitHub에 저장 중...</div>
 
   <div class="doc">
 
@@ -267,13 +325,17 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
             <div class="proj-period">2026.01 — 진행중</div>
           </div>
           <div class="proj-role">역할: 사용자 VOC 대응, 보안 취약점 점검 및 아키텍처 개선, 서버 운영·배포</div>
-          <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, Linux, Nginx, agGrid</div>
+          <div class="proj-tech">Tech: Java 21, Spring Boot, MySQL, Thymeleaf, Linux, Nginx, agGrid, Spring AOP, Spring Scheduler</div>
           <ul class="proj-bullets">
             <li>[Zero Trust 보안 아키텍처] 모의해킹 시 식별된 패킷 위변조 및 UI 조작(비활성화 버튼 강제 활성화)을 통한 권한 우회 방어를 위해, 클라이언트 요청을 신뢰하지 않고 <strong>DB 트랜잭션 진입 직전 서버 단에서 실제 권한을 최종 검증하는 구조</strong>로 전면 개편</li>
             <li>[엔터프라이즈 통합 인증(SSO)] 전사 표준 SSO 연동 기반 로그인 구현 및 OncePerRequestFilter를 활용한 <strong>API 접근 통제(2-Layer 권한 분리 아키텍처)</strong> 안정적 운영</li>
             <li>[고가용성 로드밸런싱] web/was 이중화 환경에서 특정 서버로 트래픽이 몰리는 현상을 nginx server.conf 튜닝으로 <strong>트래픽 균등 분산</strong> 실현</li>
-            <li>[보안 라우팅 & 가용성 확보] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 화이트리스트(Location 블록) 재설정 및 외부 DRM 서버 연동 데몬(.service) 자동화로 보안 서비스 연속성 보장</li>
+            <li>[보안 라우팅 &amp; 가용성 확보] 내부 대시보드 연동 시 차단된 필수 경로를 파악하여 화이트리스트(Location 블록) 재설정 및 외부 DRM 서버 연동 데몬(.service) 자동화로 보안 서비스 연속성 보장</li>
             <li>[세션 취약점 조치] 인증 쿠키(X-AUTH-TOKEN) HttpOnly/Secure 강제 적용으로 세션 하이재킹 원천 차단 및 파일 업로드 경로 Content-Disposition 헤더 강제 설정으로 브라우저 실행 취약점 조치</li>
+            <li>[보안 감사 로그 시스템 &amp; DB I/O 최적화] 사내 감사 및 사용자 행위 추적을 목표로, 데이터 변경이나 조회(Mapper 실행)가 일어나는 시점에 실시간으로 접속 기록을 수집하는 백엔드 시스템 개발</li>
+            <li>[Spring AOP 기반 비침습적 가로채기] 기 구축된 비즈니스 로직에 영향(Side-effect)을 주지 않기 위해 Spring AOP를 도입, 매퍼 레이어 실행 시점에 유저 세션 정보를 동적으로 가로채는 비침습적(Non-invasive) 아키텍처 구현 (관심사의 분리 달성)</li>
+            <li>[인메모리 버퍼링 및 임계치 기반 벌크 저장] 실시간 DB I/O로 인한 서버 부하 및 커넥션 풀 고갈을 방지하기 위해, 수집된 로그를 동시성이 보장된 ConcurrentLinkedQueue에 임시 적재한 후, 설정한 임계치(Threshold) 도달 시에만 MyBatis <foreach>를 통해 벌크(Bulk) 인서트 되도록 설계</foreach></li>
+            <li>[스케줄러 기반 데이터 유실 방지] 트래픽이 낮아 임계치를 채우지 못하고 사용자가 이탈하는 예외 케이스를 커버하기 위해, 30초 주기의 Spring Scheduler를 이중 백업 트리거로 가동하여 메모리에 남은 잔여 로그를 안전하게 상시 Flush 하도록 데이터 정합성 보장</li>
           </ul>
         </div>
 
@@ -422,7 +484,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); colo
       <div class="section-head"><h2>기술 스택</h2></div>
       <div class="skills-grid">
         <div class="sg-group">
-          <div class="sg-title">Backend & Security</div>
+          <div class="sg-title">Backend &amp; Security</div>
           <div class="sg-items">
             <div class="sg-item"><span class="sg-name">Java 21 / Spring Boot</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div></div>
             <div class="sg-item"><span class="sg-name">Spring Security / SSO 연동</span><div class="sg-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div></div>
@@ -794,5 +856,5 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
   if (!localStorage.getItem('career-theme')) applyTheme(e.matches);
 });
 </script>
-</body>
-</html>
+
+<div id="synofoto-browser-extension-loaded"></div><div syno-id="autofill-icon"></div><div syno-id="autofill-dropdown"></div></body></html>
